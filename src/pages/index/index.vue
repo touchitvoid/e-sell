@@ -114,6 +114,7 @@
 		width: 100%;
 		background: transparent;
 		position: absolute;
+		left: 0;
 		display: -webkit-flex;
 		align-items: center;
 		justify-content: center;
