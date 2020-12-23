@@ -1,10 +1,10 @@
 <template>
   <view class="fixed-bottom__nav">
-    <view :class="{ current: page === 'home'}">
+    <view @click="$emit('switch', 'home')" :class="{ current: page === 'home'}">
       <image mode="heightFix" :src="page === 'home'? homeImagec: homeImage" />
       首页
     </view>
-    <view :class="{ current: page !== 'home'}">
+    <view @click="$emit('switch', 'me')" :class="{ current: page !== 'home'}">
       <image mode="heightFix" :src="page === 'home'? userImage: userImagec" />
       个人中心
     </view>
