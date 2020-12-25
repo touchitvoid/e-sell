@@ -13,7 +13,7 @@
 		>交E销</view>
 		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
-				<view class="user-info__name flex-ai--c">
+				<view class="user-info__name flex-ai--c" @click="accountPanelShow = true">
 					肥城帝王洁具（董帅）
 					<image src="@/static/images/arrow-down.png"/>
 				</view>
@@ -76,6 +76,7 @@
 		</view>
 		<me-page v-else></me-page>
 		<fixed-bottom-nav @switch="page = $event" :page="page"></fixed-bottom-nav>
+		<pop-panel v-if="accountPanelShow" @success="accountPanelShow = false" @close="accountPanelShow = false"></pop-panel>
 	</view>
 </template>
 
@@ -83,17 +84,21 @@
 	import FixedBottomNav from '@/components/fixed-bottom-nav.vue'
 	// uniapp真难用 解决自定义tabbar性能问题
 	import MePage from '../me/index.vue'
+	import PopPanel from '@/components/pop-panel'
 
 	export default {
 		data() {
 			return {
 				bar: {},
-				page: 'me'
+				page: 'me',
+				accountPanelShow: false
 			}
 		},
 		components: {
 			FixedBottomNav,
-			MePage
+			MePage,
+			PopPanel,
+PopPanel
 		},
 		onLoad() {
 			// 获取左上角胶囊位置信息
