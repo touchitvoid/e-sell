@@ -10,7 +10,11 @@
 				height: `${bar.height+2}px`,
 				top: `${bar.top}px`
 			}"
-		>{{ title[page] }}</view>
+		>
+		<view v-if="page === 'qrcode'" class="status-bar__controller" @click.stop="page = 'home'">	
+    	<image src="@/static/images/status-bar-left.png" />
+		</view>
+		{{ title[page] }}</view>
 		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
 				<view class="user-info__name flex-ai--c" @click="accountPanelShow = true">
@@ -83,7 +87,7 @@
 
 <script>
 	import FixedBottomNav from '@/components/fixed-bottom-nav.vue'
-	// uniapp真难用 解决自定义tabbar性能问题
+	// uniapp好难用哦 解决自定义tabbar性能问题
 	import MePage from '../me/index.vue'
 	import Qrcode from '@/components/qrcode.vue'
 	import PopPanel from '@/components/pop-panel'
@@ -137,6 +141,19 @@
 		align-items: center;
 		justify-content: center;
 		color: white;
+		.status-bar__controller {
+			width: 30rpx;
+			position: absolute;
+			height: 100%;
+			left: 0;
+			display: -webkit-flex;
+			align-items: center;
+			padding-left: 24px;
+			image {
+				width: 7.78px;
+				height: 13px;
+			}
+		}
 	}
 	/* 登录用户信息 */
 	.user-info {
