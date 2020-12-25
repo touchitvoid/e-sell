@@ -2,6 +2,8 @@
   <view class="pop" @click="$emit('close')">
     <view class="pop-panel">
       <view @click.stop="$emit('success', '华北办事处')">华北办事处</view>
+      <view @click.stop="$emit('success', '华北办事处')">华北办事处</view>
+      <view @click.stop="$emit('success', '华北办事处')">华北办事处</view>
     </view>
   </view>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <view>
-    <status-bar></status-bar>
+    <status-bar title="支付"></status-bar>
     <view class="pay-info">
       <image />
       <view class="pay-info__name">
@@ -11,9 +11,9 @@
     <view class="pay-form">
       <view class="pay-input">
         <view>支付金额</view>
-        <input type="number" placeholder-style="color: #bfbfbf" placeholder="0.00" />
+        <input type="number" placeholder-style="color: #bfbfbf;" placeholder="0.00" />
       </view>
-      <input class="pay-remarks"/>
+      <input class="pay-remarks" placeholder-style="color: #bfbfbf" placeholder="请输入备注"/>
     </view>
   </view>
 </template>
@@ -86,11 +86,8 @@ export default {
         box-sizing: border-box;
         padding: 0 52rpx;
         font-size: 72rpx;
-        font-weight: 600;
+        // font-weight: 600;
         color: @title-color;
-        &::placeholder {
-          color: @describe-color;
-        }
         &::before {
           content: '¥';
           width: 36rpx;
@@ -106,5 +103,11 @@ export default {
         }
       }
     }
+  }
+  .pay-remarks {
+    width: 100%;
+    height: 96rpx;
+    font-size: 24rpx;
+    color: @title-color;
   }
 </style>

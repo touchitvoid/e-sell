@@ -12,7 +12,7 @@
       <view @click.stop="controller()" class="status-bar__controller">
         <image src="@/static/images/status-bar-left.png" />
       </view>
-      交E销
+      {{ title }}
     </view>
   </view>
 </template>
@@ -20,6 +20,12 @@
 <script>
 export default {
   name: "custom-status-bar",
+  props: {
+    title: {
+      type: String,
+      default: "交E销"
+    }
+  },
   data () {
     return {
       bar: {}

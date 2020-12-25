@@ -29,7 +29,7 @@
 				企业名称：帝欧家居股份有限公司
 				</view>
 				<view class="account-info__line flex-ai--c">
-					子账簿账号：607065225000030 <button class="copy">复制</button>
+					子账簿账号：607065225000030 <button class="copy" @click.stop="onCopy">复制</button>
 				</view>
 			</view>
 			<view class="statistics-line number">
@@ -57,7 +57,7 @@
 					<image src="@/static/images/pay.png" />
 				</view>
 				<view class="controller-default">
-					<view class="trade-record controller-item">
+					<view class="trade-record controller-item" @click.stop="$link('/pages/transaction/index')">
 						<view class="controller-item__title">
 							交易明细
 							<view class="controller-item__subtitle">
@@ -66,7 +66,7 @@
 						</view>
 						<image src="@/static/images/document.png" />
 					</view>
-					<view class="trade-statistics controller-item">
+					<view class="trade-statistics controller-item" @click.stop="$link('/pages/transaction/index')">
 						<view class="controller-item__title">
 							交易汇总
 							<view class="controller-item__subtitle">
@@ -96,7 +96,7 @@
 		data() {
 			return {
 				bar: {},
-				page: 'qrcode',
+				page: 'home',
 				accountPanelShow: false,
 				title: {
 					'me': '个人中心',
@@ -116,7 +116,12 @@
 			this.bar = wx.getMenuButtonBoundingClientRect()
 		},
 		methods: {
-			
+			// 复制
+			onCopy() {
+				uni.showToast({
+					title: "复制成功"
+				})
+			}
 		}
 	}
 </script>
