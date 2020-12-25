@@ -10,14 +10,14 @@
 				height: `${bar.height+2}px`,
 				top: `${bar.top}px`
 			}"
-		>交E销</view>
+		>{{ title[page] }}</view>
 		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
 				<view class="user-info__name flex-ai--c" @click="accountPanelShow = true">
 					肥城帝王洁具（董帅）
 					<image src="@/static/images/arrow-down.png"/>
 				</view>
-				<image class="user-info__qrcode" src="@/static/images/qrcode.png"/>
+				<image @click="page = 'qrcode'" class="user-info__qrcode" src="@/static/images/qrcode.png"/>
 			</view>
 			<view class="account-info padding-16">
 				<view class="account-info__title">回款账户信息</view>
@@ -74,8 +74,9 @@
 				</view>
 			</view>
 		</view>
-		<me-page v-else></me-page>
-		<fixed-bottom-nav @switch="page = $event" :page="page"></fixed-bottom-nav>
+		<me-page v-if="page === 'me'"></me-page>
+		<qrcode v-if="page === 'qrcode'"></qrcode>
+		<fixed-bottom-nav v-if="page !== 'qrcode'" @switch="page = $event" :page="page"></fixed-bottom-nav>
 		<pop-panel v-if="accountPanelShow" @success="accountPanelShow = false" @close="accountPanelShow = false"></pop-panel>
 	</view>
 </template>
@@ -84,21 +85,27 @@
 	import FixedBottomNav from '@/components/fixed-bottom-nav.vue'
 	// uniapp真难用 解决自定义tabbar性能问题
 	import MePage from '../me/index.vue'
+	import Qrcode from '@/components/qrcode.vue'
 	import PopPanel from '@/components/pop-panel'
 
 	export default {
 		data() {
 			return {
 				bar: {},
-				page: 'me',
-				accountPanelShow: false
+				page: 'qrcode',
+				accountPanelShow: false,
+				title: {
+					'me': '个人中心',
+					'home': '交E销',
+					'qrcode': '固定收款码'
+				}
 			}
 		},
 		components: {
 			FixedBottomNav,
 			MePage,
 			PopPanel,
-PopPanel
+			Qrcode
 		},
 		onLoad() {
 			// 获取左上角胶囊位置信息
