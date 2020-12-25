@@ -33,4 +33,8 @@
 		display: -webkit-flex;
 		justify-content: space-between;
 	}
+	.divider-16 {
+		width: 100%;
+		height: 32rpx;
+	}
 </style>

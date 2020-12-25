@@ -1,6 +1,5 @@
 <template>
 	<view 
-		class="padding-16"
 		style="box-sizing: border-box"
 		:style="{
 			paddingTop: `${bar.top + bar.height+2}px`
@@ -12,7 +11,7 @@
 				top: `${bar.top}px`
 			}"
 		>交E销</view>
-		<view v-if="page === 'home'">
+		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
 				<view class="user-info__name flex-ai--c">
 					肥城帝王洁具（董帅）
@@ -89,7 +88,7 @@
 		data() {
 			return {
 				bar: {},
-				page: 'home'
+				page: 'me'
 			}
 		},
 		components: {
