@@ -1,5 +1,7 @@
 <template>
-  <view>
+  <view class="status-bar__full" :style="{
+    height: `${bar.top+bar.height+2}px`
+  }">
 		<image class="index-bar__background" mode="widthFix" src="@/static/images/background.png" >
     <view
       class="index-bar__title"
@@ -37,7 +39,7 @@ export default {
 	/* 状态栏背景图 */
 	.index-bar__background {
 		width: 100%;
-		position: absolute;
+		position: relative;
 		top: 0;
 		left: 0;
 		z-index: -1;

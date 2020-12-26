@@ -28,7 +28,7 @@
       </view>
     </view>
     <view class="transaction-list">
-      <view class="transaction-line" v-for="num in 5" :key="num">
+      <view class="transaction-line" v-for="num in 5" :key="num" @click.stop="$link('/pages/order/detail')">
         <image :src="num%2 === 1? IncomeIcon: ExpenditureIcon" />
         <view class="transaction-content">
           支付手续费
