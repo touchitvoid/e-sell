@@ -47,7 +47,7 @@
 			<view class="controller">
 				<view 
 					class="controller-primary controller-item" 
-					@click.stop="$link('/pages/pay/index')">
+					@click.stop="controller">
 					<view class="controller-item__title">
 						支付
 						<view class="controller-item__subtitle">
@@ -121,6 +121,12 @@
 				uni.showToast({
 					title: "复制成功"
 				})
+			},
+			controller() {
+				console.log('controller')
+				this.$link('/pages/business/index')
+				return
+				this.$link('/pages/pay/index')
 			}
 		}
 	}

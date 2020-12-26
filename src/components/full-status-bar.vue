@@ -10,6 +10,9 @@
         top: `${bar.top+2}px`,
       }"
       >
+      <view class="status-bar__controller" @click="controller">	
+        <image src="@/static/images/status-bar-left.png" />
+      </view>
       {{ title }}
     </view>
   </view>
@@ -31,11 +34,23 @@ export default {
   },
   onReady() {
     this.bar = wx.getMenuButtonBoundingClientRect()
+  },
+  methods: {
+    controller() {
+      uni.navigateBack()
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
+  // .status-bar__full {
+  //   position: fixed;
+  //   width: 100%;
+  //   top: 0;
+  //   left: 0;
+  //   z-index: 99;
+  // }
 	/* 状态栏背景图 */
 	.index-bar__background {
 		width: 100%;
@@ -53,5 +68,18 @@ export default {
 		align-items: center;
 		justify-content: center;
 		color: white;
+    .status-bar__controller {
+      width: 30rpx;
+      position: absolute;
+      height: 100%;
+      left: 0;
+      display: -webkit-flex;
+      align-items: center;
+      padding-left: 24px;
+      image {
+        width: 7.78px;
+        height: 13px;
+      }
+    }
 	}
 </style>

@@ -2,7 +2,7 @@
   <view>
     <view class="account-info">
       <image class="account-avatar" :src="defaultAvatar" />
-      <view class="account-info__show">
+      <view class="account-info__show" @click="$link('/pages/me/username')">
         <view class="account-type">
           办事处
         </view>
@@ -16,10 +16,10 @@
       </view>
     </view>
     <view class="basic-info">
-      <custom-line title="密码" content="已有密码"></custom-line>
-      <custom-line title="手机号码"></custom-line>
-      <custom-line title="邮箱"></custom-line>
-      <custom-line title="微信" content="帝王洁具"></custom-line>
+      <custom-line title="密码" content="已有密码" @click.native="$link('/pages/me/password')"></custom-line>
+      <custom-line title="手机号码" @click.native="$link('/pages/me/phone')"></custom-line>
+      <custom-line title="邮箱" @click.native="$link('/pages/me/email')"></custom-line>
+      <custom-line title="微信" content="帝王洁具" @click.native="$link('/pages/me/wechat')"></custom-line>
     </view>
     <view class="divider-16"></view>
     <custom-line title="用户管理"></custom-line>
