@@ -37,6 +37,10 @@
 		width: 100%;
 		height: 32rpx;
 	}
+	.divider-12 {
+		width: 100%;
+		height: 24rpx;
+	}
 	.tips {
 		width: 100%;
 		min-height: 96rpx;

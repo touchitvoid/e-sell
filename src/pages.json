@@ -31,6 +31,22 @@
 			}
 		},
 		{
+			"path": "pages/transaction/statistics",
+			"style": {
+				"navigationBarTitleText": "交易汇总",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/transaction/detail",
+			"style": {
+				"navigationBarTitleText": "交易明细",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
 			"path": "pages/order/detail",
 			"style": {
 				"navigationBarTitleText": "订单详情",

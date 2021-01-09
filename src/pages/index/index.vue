@@ -44,6 +44,7 @@
 					<text>¥</text>809,932.12
 				</view>
 			</view>
+			<view @click="$link('/pages/business/index')">点我进客户管理</view>
 			<view class="controller">
 				<view 
 					class="controller-primary controller-item" 
@@ -57,7 +58,7 @@
 					<image src="@/static/images/pay.png" />
 				</view>
 				<view class="controller-default">
-					<view class="trade-record controller-item" @click.stop="$link('/pages/transaction/index')">
+					<view class="trade-record controller-item" @click.stop="$link('/pages/transaction/detail')">
 						<view class="controller-item__title">
 							交易明细
 							<view class="controller-item__subtitle">
@@ -66,7 +67,7 @@
 						</view>
 						<image src="@/static/images/document.png" />
 					</view>
-					<view class="trade-statistics controller-item" @click.stop="$link('/pages/transaction/index')">
+					<view class="trade-statistics controller-item" @click.stop="$link('/pages/transaction/statistics')">
 						<view class="controller-item__title">
 							交易汇总
 							<view class="controller-item__subtitle">
@@ -102,6 +103,9 @@
 					'me': '个人中心',
 					'home': '交E销',
 					'qrcode': '固定收款码'
+				},
+				user: {
+					name: ''
 				}
 			}
 		},
@@ -123,9 +127,6 @@
 				})
 			},
 			controller() {
-				console.log('controller')
-				this.$link('/pages/business/index')
-				return
 				this.$link('/pages/pay/index')
 			}
 		}

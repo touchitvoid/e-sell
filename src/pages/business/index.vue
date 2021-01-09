@@ -10,7 +10,7 @@
     </view>
     <view class="divider-16"></view>
     <view class="padding-16">
-      <view class="business-card" v-for="item in 4" :key="item">
+      <view class="business-card" v-for="item in 1" :key="item">
         <view class="business-card__content">
           <view class="business-card__title">
             内蒙锡盟二连浩特帝王吴军
