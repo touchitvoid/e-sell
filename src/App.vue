@@ -29,6 +29,11 @@
 		display: -webkit-flex;
 		align-items: center;
 	}
+	.flex-just-center {
+		display: -webkit-flex;
+		align-items: center;
+		justify-content: center;
+	}
 	.flex-jc--sb {
 		display: -webkit-flex;
 		justify-content: space-between;

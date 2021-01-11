@@ -101,6 +101,14 @@
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/tool/business",
+			"style": {
+				"navigationBarTitleText": "一级商户",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

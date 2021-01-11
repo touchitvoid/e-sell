@@ -20,7 +20,7 @@
     <custom-line title="一级子商户" :contentShow="false"></custom-line>
     <view class="divider-16"></view>
     <view class="divider-16"></view>
-    <custom-line title="查询" type="button"></custom-line>
+    <custom-line title="查询" type="button" @click.native="$link('/pages/tool/business')"></custom-line>
   </view>
 </template>
 
