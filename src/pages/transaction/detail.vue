@@ -5,7 +5,7 @@
       <view v-for="(str, key) in tabs" :key="key">
         {{ str }}
       </view>
-      <view>
+      <view @click="$link('/pages/tool/screen')">
         筛选
         <img mode="widthFix" src="@/static/icons/arrow-bottom.svg" />
       </view>
@@ -31,43 +31,7 @@
         <view class="transaction-info">
           <view class="transaction-date">
             <view>
-              <image mode="widthFix" :src="IncomeIcon"/>
-              肥城帝王洁具
-            </view>
-            2020-12-21 21:46:06
-          </view>
-          <view class="transaction-amount">
-            <view class="transation-amount__total">
-              <text>¥</text>12,000.00
-            </view>
-            <view class="transation-amount__other">
-              <view>
-                手续费
-                <view>27.60</view>
-              </view>
-              <view>
-                应结算
-                <view>27.60</view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="transaction-remarks">
-          <view>
-            交易对手
-            <view>5fd707a566a53a045a2dc6fe</view>
-          </view>
-          <view>
-            备注
-            <view>收款</view>
-          </view>
-        </view>
-      </view>
-      <view class="transaction-card">
-        <view class="transaction-info">
-          <view class="transaction-date">
-            <view>
-              <image mode="widthFix" :src="IncomeIcon"/>
+              <image mode="widthFix" :src="AlipayIcon"/>
               肥城帝王洁具
             </view>
             2020-12-21 21:46:06
@@ -105,8 +69,10 @@
 
 <script>
 import StatusBar from '@/components/custom-status-bar'
-import ExpenditureIcon from '@/static/icons/expenditure.png'
-import IncomeIcon from '@/static/icons/income.png'
+import AlipayIcon from '@/static/icons/alipay.png'
+import WechatIcon from '@/static/icons/wechat.png'
+import TradeIcon from '@/static/icons/trade.png'
+import BankIcon from '@/static/icons/bank.png'
 
 export default {
   name: "transaction-detail",
@@ -115,8 +81,10 @@ export default {
   },
   data () {
     return {
-      ExpenditureIcon,
-      IncomeIcon,
+      AlipayIcon,
+      WechatIcon,
+      TradeIcon,
+      BankIcon,
       tabs: {
         0: '全部',
         1: '交易成功',

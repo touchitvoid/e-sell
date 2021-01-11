@@ -93,6 +93,14 @@
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/tool/screen",
+			"style": {
+				"navigationBarTitleText": "筛选",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

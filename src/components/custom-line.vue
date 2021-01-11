@@ -7,7 +7,7 @@
       <view>{{ title }}</view>
       <view class="arrow-line__right" :class="{ 'no-data': !content }">
         <template v-if="!arrowCustom">
-          {{ content||'无' }}
+          <span v-if="contentShow">{{ content||'无' }}</span>
           <image src="@/static/images/arrow-right.png" />
         </template>
         <slot v-if="arrowCustom"></slot>
@@ -41,6 +41,10 @@ export default {
     content: {
       type: String,
       default: ''
+    },
+    contentShow: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
