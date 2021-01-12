@@ -109,6 +109,22 @@
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/user/manage",
+			"style": {
+				"navigationBarTitleText": "用户管理",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/user/create",
+			"style": {
+				"navigationBarTitleText": "新增用户",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

@@ -22,7 +22,7 @@
       <custom-line title="微信" content="帝王洁具" @click.native="$link('/pages/me/wechat')"></custom-line>
     </view>
     <view class="divider-16"></view>
-    <custom-line title="用户管理"></custom-line>
+    <custom-line @click.native="$link('/pages/user/manage')" title="用户管理" :contentShow="false"></custom-line>
     <view class="divider-16"></view>
     <view>
       <custom-line title="查看商户绑定的银行卡"></custom-line>
