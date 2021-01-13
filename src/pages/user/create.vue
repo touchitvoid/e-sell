@@ -20,9 +20,7 @@ export default {
     CustomLine
   },
   data () {
-    return {
-
-    }
+    return {}
   }
 }
 </script>

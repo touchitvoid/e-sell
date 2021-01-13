@@ -78,6 +78,20 @@
 					</view>
 				</view>
 			</view>
+			<view class="divider-16"></view>
+			<view class="controller">
+				<view class="controller-default" style="width: 100%">
+					<view class="bill controller-item" @click.stop="$link('/pages/bill/pay')">
+						<view class="controller-item__title">
+							应付账单
+							<view class="controller-item__subtitle">
+								Transaction summary
+							</view>
+						</view>
+						<image mode="widthFix" src="@/static/icons/bill.png" />
+					</view>
+				</view>
+			</view>
 		</view>
 		<me-page v-if="page === 'me'"></me-page>
 		<qrcode v-if="page === 'qrcode'"></qrcode>
@@ -271,6 +285,7 @@
 			background: linear-gradient(90deg, #DFEBFE 0%, #B2CCFF 100%);
 			color: #2A58E1;
 		}
+
 	}
 	/* 操作菜单 */
 	.controller {
@@ -344,6 +359,13 @@
 					background-color: #13C2C2;
 					image {
 						height: 64rpx;
+					}
+				}
+				&.bill {
+					background-color: #007AFF;
+					image {
+						width: 90rpx;
+						margin-right: 32rpx;
 					}
 				}
 			}
