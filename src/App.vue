@@ -42,6 +42,10 @@
 		width: 100%;
 		height: 32rpx;
 	}
+	.divider-22 {
+		width: 100%;
+		height: 44rpx;
+	}
 	.divider-12 {
 		width: 100%;
 		height: 24rpx;

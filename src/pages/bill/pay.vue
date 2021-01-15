@@ -1,7 +1,7 @@
 <template>
   <view>
     <full-status-bar title="应付账单"></full-status-bar>
-    <view class="divider-16"></view>
+    <view class="divider-22"></view>
     <view class="padding-16">
       <view class="account-info padding-16">
         <view class="account-info__title">还款账户信息</view>
@@ -19,7 +19,7 @@
     <view class="padding-16">
       <view class="bill-title">
         应付账单
-        <text>查询历史账单</text>
+        <text @click="$link('/pages/bill/history')">查询历史账单</text>
       </view>
       <view class="bill-card" v-for="item in 3">
         <view class="bill-info">

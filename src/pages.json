@@ -133,6 +133,22 @@
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/bill/detail",
+			"style": {
+				"navigationBarTitleText": "应付账单",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/bill/history",
+			"style": {
+				"navigationBarTitleText": "历史账单",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {
