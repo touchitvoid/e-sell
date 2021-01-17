@@ -21,7 +21,7 @@
         应付账单
         <text @click="$link('/pages/bill/history')">查询历史账单</text>
       </view>
-      <view class="bill-card" v-for="item in 3">
+      <view class="bill-card" v-for="item in 3" @click.stop="$link('/pages/bill/trade')">
         <view class="bill-info">
           <view class="bill-info__amount">
             <image mode="widthFix" :src="BillOrderIcon" />
