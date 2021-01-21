@@ -10,7 +10,7 @@
         top: `${bar.top+2}px`,
       }"
       >
-      <view class="status-bar__controller" @click="controller">	
+      <view v-if="arrowShow" class="status-bar__controller" @click="controller">	
         <image src="@/static/images/status-bar-left.png" />
       </view>
       {{ title }}
@@ -25,6 +25,10 @@ export default {
     title: {
       type: String,
       default: ""
+    },
+    arrowShow: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

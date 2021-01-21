@@ -32,7 +32,7 @@
       <custom-line title="推送信息"></custom-line>
     </view>
     <view class="divider-16"></view>
-    <custom-line type="button" title="退出登录"></custom-line>
+    <custom-line @click.native="$link('/pages/login/index')" type="button" title="退出登录"></custom-line>
   </view>
 </template>
 
