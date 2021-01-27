@@ -6,10 +6,13 @@
     </view>
     <view class="padding-16">
       <view class="login-box">
-        <input placeholder="请输入用户名" type="text"/>
-        <input placeholder="请输入密码" type="text"/>
-        <button class="login-btn" @click="$link('/pages/index/index')">登录</button>
-        <button class="login-wechat">微信一键登录</button>
+        <input v-model="form.account" placeholder="请输入用户名" type="text"/>
+        <input v-model="form.password" placeholder="请输入密码" type="password"/>
+        <button class="login-btn" @click="handleLogin">登录</button>
+        <button 
+          class="login-wechat" 
+          open-type="getUserInfo" 
+          @getuserinfo="getUserInfo">微信一键登录</button>
         <view class="check-line">
           <image src="@/static/icons/checkbox.png"/>
           阅读并同意<text>《交E销用户使用协议》《交E销个人隐私协议》</text>
@@ -21,6 +24,7 @@
 
 <script>
 import FullStatusBar from '@/components/full-status-bar'
+import { PostLogin } from '@/api'
 
 export default {
   name: "login",
@@ -29,7 +33,29 @@ export default {
   },
   data () {
     return {
-
+      form: {}
+    }
+  },
+  methods: {
+    // login default params
+    loginParams: () => ({
+        user_type: 'distributor',
+        grant_type: 'account',
+        platform_type: 'mini_program'
+    }),
+    async handleLogin() {
+      if (!this.form.account) return this.$toast('请输入用户名')
+      if (!this.form.password) return this.$toast('请输入密码')
+      const { data, code, error } = await PostLogin({...this.form, ...this.loginParams()})
+      // verify error
+      if (!data) return this.$toast(error)
+      uni.setStorageSync('token', data.token)
+      // return uri
+      this.$redirectTo('/pages/index/index')
+    },
+    getUserInfo({ detail }) {
+      if (detail.errMsg === "getUserInfo:fail auth deny") return this.$toast("用户取消授权");
+      console.log(detail)
     }
   }
 }
