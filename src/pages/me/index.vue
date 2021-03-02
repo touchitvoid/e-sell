@@ -40,6 +40,7 @@
 import defaultAvatar from '@/static/images/default-avatar.png'
 import CustomLine from '@/components/custom-line.vue'
 import CustomSwitch from '@/components/custom-switch.vue'
+import { GetUcInfo } from '@/api'
 
 export default {
   name: "me",
@@ -55,6 +56,14 @@ export default {
   },
   onLoad() {},
   methods: {
+    // getInfo() {
+    //   try {
+    //     const { data } = await GetUcInfo()
+    //     console.log(data) 
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
     switchPayNotice(e) {
       console.log(e)
     }

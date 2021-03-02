@@ -109,7 +109,7 @@ export default {
               scan_code: result,
               ...this.form
             })
-            if (!data) return this.$toast(error)
+            // if (!data) return this.$toast(error)
           } catch (error) {
             console.log(error)
           }
@@ -123,7 +123,7 @@ export default {
           console.log(res)
           try {
             const { data, error } = await Payment(this.form)
-            if (!data) return this.$toast(error)
+            // if (!data) return this.$toast(error)
             WxPay(data.pay_package, () => {
               console.log("wxPay!")
             })

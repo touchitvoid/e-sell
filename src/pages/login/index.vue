@@ -52,6 +52,7 @@ export default {
       // verify error
       if (!data) return this.$toast(error)
       uni.setStorageSync('token', data.token)
+      uni.setStorageSync('role', data.role)
       // return uri
       this.$redirectTo('/pages/index/index')
     },

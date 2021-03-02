@@ -20,6 +20,13 @@ fly.interceptors.response.use(response => {
     })
   }
   uni.hideLoading()
+  if (!response.data.data) {
+    uni.showToast({
+      title: response.data.error,
+      icon: "none"
+    })
+    throw error('error')
+  }
   return response.data
 })
 

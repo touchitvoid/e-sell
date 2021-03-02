@@ -44,18 +44,18 @@
 					<text>¥</text>{{ info.cumulative_amount||0 }}
 				</view>
 			</view>
-			<view @click="$link('/pages/business/index')">点我进客户管理</view>
 			<view class="controller">
 				<view 
 					class="controller-primary controller-item" 
 					@click.stop="controller">
 					<view class="controller-item__title">
-						支付
+						{{ role === 2? '客户管理': '支付' }}
 						<view class="controller-item__subtitle">
-							Pay
+							{{ role === 2? 'Account': 'Pay' }}
 						</view>
 					</view>
-					<image src="@/static/images/pay.png" />
+					<image mode="widthFix" v-if="role === 2" src="@/static/images/user-model.png" />
+					<image v-else src="@/static/images/pay.png" />
 				</view>
 				<view class="controller-default">
 					<view class="trade-record controller-item" @click.stop="$link('/pages/transaction/detail')">
@@ -79,7 +79,7 @@
 				</view>
 			</view>
 			<view class="divider-16"></view>
-			<view class="controller">
+			<view v-if="role === 3" class="controller">
 				<view class="controller-default" style="width: 100%">
 					<view class="bill controller-item" @click.stop="$link('/pages/bill/pay')">
 						<view class="controller-item__title">
@@ -124,7 +124,8 @@
 				user: {
 					name: ''
 				},
-				info: {}
+				info: {},
+				role: 1 // 1-主角色 2-普通商户 3-经销商
 			}
 		},
 		components: {
@@ -132,6 +133,9 @@
 			MePage,
 			PopPanel,
 			Qrcode
+		},
+		onReady() {
+			this.role = uni.getStorageSync('role')
 		},
 		onLoad() {
 			// 获取左上角胶囊位置信息
@@ -146,6 +150,8 @@
 				})
 			},
 			controller() {
+				console.log(this.role)
+				if (this.role === 2) return this.$link('/pages/business/index')
 				this.$link('/pages/pay/index')
 			},
 			async getInfo() {
