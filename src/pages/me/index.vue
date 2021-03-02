@@ -1,31 +1,32 @@
 <template>
   <view>
     <view class="account-info">
-      <image class="account-avatar" :src="defaultAvatar" />
+      <image class="account-avatar" :src="info.wx_avatar_url ? info.wx_avatar_url : defaultAvatar" />
       <view class="account-info__show" @click="$link('/pages/me/username')">
-        <view class="account-type">
-          办事处
+        <view v-if="info.level" class="account-type">
+          {{ info.level }}
         </view>
         <view class="account-name">
-          华北办事处
-          <text>(dw602601)</text>
+          {{ info.name }}
+          <text>({{ info.username }})</text>
         </view>
         <view class="account-code">
-          3421984853953369
+          {{ info.bank_sub_account }}
         </view>
       </view>
     </view>
     <view class="basic-info">
+      <custom-line title="用户名" :content="info.username" @click.native="$link('/pages/me/username')"></custom-line>
       <custom-line title="密码" content="已有密码" @click.native="$link('/pages/me/password')"></custom-line>
-      <custom-line title="手机号码" @click.native="$link('/pages/me/phone')"></custom-line>
-      <custom-line title="邮箱" @click.native="$link('/pages/me/email')"></custom-line>
-      <custom-line title="微信" content="帝王洁具" @click.native="$link('/pages/me/wechat')"></custom-line>
+      <custom-line title="手机号码" :content="info.telephone" @click.native="$link('/pages/me/phone')"></custom-line>
+      <custom-line title="邮箱" :content="info.email" @click.native="$link('/pages/me/email')"></custom-line>
+      <custom-line title="微信" :content="info.wx_nickname" @click.native="$link('/pages/me/wechat')"></custom-line>
     </view>
     <view class="divider-16"></view>
     <custom-line @click.native="$link('/pages/user/manage')" title="用户管理" :contentShow="false"></custom-line>
     <view class="divider-16"></view>
     <view>
-      <custom-line title="查看商户绑定的银行卡"></custom-line>
+      <custom-line title="查看商户绑定的银行卡" :content="info.bank_sub_account"></custom-line>
       <custom-line title="是否接收支付通知" arrowCustom>
         <custom-switch v-model="switchStatus" style="margin-right: -6px"></custom-switch>
       </custom-line>
@@ -47,23 +48,26 @@ export default {
   data () {
     return {
       defaultAvatar,
-      switchStatus: true
+      switchStatus: true,
+      info: {}
     }
   },
   components: {
     CustomLine,
     CustomSwitch
   },
-  onLoad() {},
+  onReady() {
+    this.getUcInfo()
+  },
   methods: {
-    // getInfo() {
-    //   try {
-    //     const { data } = await GetUcInfo()
-    //     console.log(data) 
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
+    async getUcInfo() {
+      try {
+        const { data } = await GetUcInfo()
+        this.info = data
+      } catch (error) {
+        console.log(error)
+      }
+    },
     switchPayNotice(e) {
       console.log(e)
     }

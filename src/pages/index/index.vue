@@ -114,7 +114,7 @@
 		data() {
 			return {
 				bar: {},
-				page: 'home',
+				page: 'me',
 				accountPanelShow: false,
 				title: {
 					'me': '个人中心',
@@ -134,13 +134,22 @@
 			PopPanel,
 			Qrcode
 		},
+		watch: {
+			'page': {
+				immediate: true,
+				handler(page) {
+					if (page === 'home') {
+						this.getInfo()
+					}
+				}
+			}
+		},
 		onReady() {
 			this.role = uni.getStorageSync('role')
 		},
-		onLoad() {
+		onShow() {
 			// 获取左上角胶囊位置信息
 			this.bar = wx.getMenuButtonBoundingClientRect()
-			this.getInfo()
 		},
 		methods: {
 			// 复制

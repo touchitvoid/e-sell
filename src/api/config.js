@@ -25,6 +25,7 @@ fly.interceptors.response.use(response => {
       title: response.data.error,
       icon: "none"
     })
+    console.log('api error')
     throw error('error')
   }
   return response.data
