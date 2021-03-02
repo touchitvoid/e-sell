@@ -18,7 +18,7 @@
 		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
 				<view class="user-info__name flex-ai--c" @click="accountPanelShow = true">
-					肥城帝王洁具（董帅）
+					{{ info.name||'' }}
 					<image src="@/static/images/arrow-down.png"/>
 				</view>
 				<image @click="page = 'qrcode'" class="user-info__qrcode" src="@/static/images/qrcode.png"/>
@@ -26,22 +26,22 @@
 			<view class="account-info padding-16">
 				<view class="account-info__title">回款账户信息</view>
 				<view class="account-info__line">
-				企业名称：帝欧家居股份有限公司
+				企业名称：{{ info.customer_name||'' }}
 				</view>
 				<view class="account-info__line flex-ai--c">
-					子账簿账号：607065225000030 <button class="copy" @click.stop="onCopy">复制</button>
+					子账簿账号：{{ info.bank_sub_account||'未知' }} <button class="copy" @click.stop="onCopy">复制</button>
 				</view>
 			</view>
 			<view class="statistics-line number">
-				今日支付0笔
+				今日支付{{ info.today_pay_num||0 }}笔
 				<view>
-					<text>¥</text>0
+					<text>¥</text>{{ info.today_pay_amount||0 }}
 				</view>
 			</view>
 			<view class="statistics-line amount">
 				子账薄累计
 				<view>
-					<text>¥</text>809,932.12
+					<text>¥</text>{{ info.cumulative_amount||0 }}
 				</view>
 			</view>
 			<view @click="$link('/pages/business/index')">点我进客户管理</view>
@@ -95,6 +95,7 @@
 		</view>
 		<me-page v-if="page === 'me'"></me-page>
 		<qrcode v-if="page === 'qrcode'"></qrcode>
+		<view class="bottom-line"></view>
 		<fixed-bottom-nav v-if="page !== 'qrcode'" @switch="page = $event" :page="page"></fixed-bottom-nav>
 		<pop-panel v-if="accountPanelShow" @success="accountPanelShow = false" @close="accountPanelShow = false"></pop-panel>
 	</view>
@@ -106,6 +107,8 @@
 	import MePage from '../me/index.vue'
 	import Qrcode from '@/components/qrcode.vue'
 	import PopPanel from '@/components/pop-panel'
+	// api
+	import { GetDistributorInfo } from '@/api'
 
 	export default {
 		data() {
@@ -120,7 +123,8 @@
 				},
 				user: {
 					name: ''
-				}
+				},
+				info: {}
 			}
 		},
 		components: {
@@ -132,6 +136,7 @@
 		onLoad() {
 			// 获取左上角胶囊位置信息
 			this.bar = wx.getMenuButtonBoundingClientRect()
+			this.getInfo()
 		},
 		methods: {
 			// 复制
@@ -142,6 +147,11 @@
 			},
 			controller() {
 				this.$link('/pages/pay/index')
+			},
+			async getInfo() {
+				const { code, data } = await GetDistributorInfo()
+				if (!data) return
+				this.info = data
 			}
 		}
 	}
@@ -150,6 +160,10 @@
 <style lang="less" scoped>
 	@radius-px: 8px;
 
+	.bottom-line {
+		width: 100%;
+		height: 124rpx;
+	}
 	/* 状态栏背景图 */
 	.index-bar__background {
 		width: 100%;

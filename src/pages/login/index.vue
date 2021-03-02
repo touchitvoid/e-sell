@@ -33,7 +33,9 @@ export default {
   },
   data () {
     return {
-      form: {}
+      form: {
+        code: ''
+      }
     }
   },
   methods: {
@@ -55,7 +57,9 @@ export default {
     },
     getUserInfo({ detail }) {
       if (detail.errMsg === "getUserInfo:fail auth deny") return this.$toast("用户取消授权");
-      console.log(detail)
+      wx.login({
+        success: ({ code }) => this.code = code
+      })
     }
   }
 }

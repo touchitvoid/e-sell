@@ -46,7 +46,9 @@ export default {
 <style lang="less" scoped>
   .status-bar {
     width: 100%;
+    height: 120rpx;
     overflow-y: hidden;
+    transition: all .3s;
     .status-bar__background {
       width: 100%;
       position: relative;

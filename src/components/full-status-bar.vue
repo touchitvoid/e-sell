@@ -58,10 +58,12 @@ export default {
 	/* 状态栏背景图 */
 	.index-bar__background {
 		width: 100%;
+    height: 750rpx;
 		position: relative;
 		top: 0;
 		left: 0;
 		z-index: -1;
+    transition: all .3s;
 	}
 	.index-bar__title {
 		width: 100%;

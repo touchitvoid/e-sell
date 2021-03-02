@@ -1,9 +1,13 @@
 <template>
   <view class="pop" @click="$emit('close')">
     <view class="pop-panel">
-      <view @click.stop="$emit('success', '华北办事处')">华北办事处</view>
-      <view @click.stop="$emit('success', '华北办事处')">华北办事处</view>
-      <view @click.stop="$emit('success', '华北办事处')">华北办事处</view>
+      <view 
+        v-for="item in options" 
+        :key="item.key" 
+        @click.stop="$emit('select', item)">
+        {{ item.label }}
+      </view>
+      <view class="cancel" @click="handleCancel">取消</view>
     </view>
   </view>
 </template>
@@ -11,8 +15,22 @@
 <script>
 export default {
   name: "pop-panel",
+  props: {
+    options: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {}
+  },
+  onReady() {
+  },
+  methods: {
+    handleCancel() {
+      this.$emit('close')
+      this.$emit('cancel')
+    }
   }
 }
 </script>
@@ -40,6 +58,9 @@ export default {
         height: 112rpx;
         line-height: 112rpx;
         color: #262626;
+        &.cancel {
+          border-top: 1px solid rgba(0, 0, 0, .1);
+        }
       }
     }
   }
