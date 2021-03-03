@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './App'
 
+import FullBackground from '@/components/full-background'
+
+Vue.component('FullBackground', FullBackground)
 Vue.config.productionTip = false
 
 Vue.prototype.$link = url => uni.navigateTo({ url })

@@ -1,24 +1,31 @@
 <template>
   <view>
-    <full-status-bar></full-status-bar>
+    <full-status-bar title="商户列表"></full-status-bar>
+    <full-background></full-background>
     <view class="search padding-16">
       <view class="search-describe">
-        共144个商户
+        共{{ total }}个商户
         <text>按业务层级筛选</text>
       </view>
-      <input placeholder="输入名称、手机号码、姓名进行搜索" placeholder-style="color: #C1C7D0;" />
+      <input 
+        v-model="search"
+        placeholder="输入名称、手机号码、姓名进行搜索"
+        placeholder-style="color: #C1C7D0;"
+        @blur="getList"
+        @keyup.enter="getList"
+      />
     </view>
     <view class="divider-16"></view>
     <view class="padding-16">
-      <view class="business-card" v-for="item in 1" :key="item">
+      <view class="business-card" v-for="info in list" :key="info.id">
         <view class="business-card__content">
           <view class="business-card__title">
-            内蒙锡盟二连浩特帝王吴军
-            <text>15250008</text>
+            {{info.name + info.wx_nickname}}
+            <text>{{ info.id }}</text>
           </view>
-          <view>负责人姓名: 吴军</view>
-          <view>手机号码: 13664791828</view>
-          <view>子账薄账号: 9902001366413522</view>
+          <view>负责人姓名: {{ info.real_name }}</view>
+          <view>手机号码: {{ info.telephone }}</view>
+          <view>子账薄账号: {{ info.bank_sub_account || '' }}</view>
         </view>
         <view class="business-card__controller">
           <view>
@@ -35,21 +42,55 @@
           </view>
         </view>
       </view>
+      <no-data v-if="list.length === 0"></no-data>
     </view>
   </view>
 </template>
 
 <script>
 import FullStatusBar from "@/components/full-status-bar.vue"
+import NoData from '@/components/no-data'
+import { GetCustomerList, GetLevelList } from '@/api'
 
 export default {
   name: "business",
   components: {
-    FullStatusBar
+    FullStatusBar,
+    NoData
   },
   data () {
     return {
-      
+      list: [],
+      search: '',
+      sub_cd_id: 0,
+      total: 0
+    }
+  },
+  onLoad() {
+    this.getLevelList()
+  },
+  methods: {
+    async getList() {
+      try {
+        const { data } =  await GetCustomerList({ 
+          is_total: 1,
+          keyword: this.search,
+          sub_cd_id: this.sub_cd_id
+        })
+        this.list = data.list
+        this.total = +data.num
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getLevelList() {
+      try {
+        const { data } = await GetLevelList()
+        this.sub_cd_id = data[0].id
+        this.getList()
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
@@ -133,9 +174,26 @@ export default {
         font-weight: 400;
         display: -webkit-flex;
         align-items: center;
+        &:nth-child(1) {
+          image {
+            width: 38rpx;
+            height: 38rpx;
+          }
+        }
+        &:nth-child(2) {
+          image {
+            width: 40rpx;
+            height: 40rpx;
+          }
+        }
+        &:nth-child(3) {
+          image {
+            width: 38rpx;
+            height: 43rpx;
+          }
+        }
       }
       image {
-        width: 38rpx;
         margin-right: 14rpx;
       }
     }

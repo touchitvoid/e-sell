@@ -2,10 +2,12 @@ import fly from './config'
 
 const api = {
   pay: '/api/payment/unified',
-  password: '/api/distributor/password'
+  password: '/api/distributor/password',
+  customer: '/api/distributor/sub/lists'
 }
-const pay ={
+const pay = {
   status: '/api/payment/query'
+  
 }
 
 // login
@@ -17,7 +19,11 @@ export const GetDistributorInfo = params => fly.post('/api/distributor/info', pa
 export const GetUcInfo = params => fly.post('/api/distributor/uc/info', params)
 // 修改密码
 export const PatchPassword = params => fly.post('/api/distributor/password', params)
-// 支付,
+// 支付
 export const Payment = params => fly.post(api.pay, params)
 // 支付状态
 export const GetPayStatus = params => fly.post(pay.status, params)
+// 获取客户列表
+export const GetCustomerList = params => fly.post(api.customer, params)
+// 获取业务层级数据
+export const GetLevelList = params => fly.post('/api/distributor/level/lists', params)

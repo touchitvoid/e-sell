@@ -48,13 +48,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  // .status-bar__full {
-  //   position: fixed;
-  //   width: 100%;
-  //   top: 0;
-  //   left: 0;
-  //   z-index: 99;
-  // }
+  .status-bar__full {
+    position: sticky;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    overflow: hidden;
+  }
 	/* 状态栏背景图 */
 	.index-bar__background {
 		width: 100%;
@@ -62,7 +63,7 @@ export default {
 		position: relative;
 		top: 0;
 		left: 0;
-		z-index: -1;
+		z-index: -99;
     transition: all .3s;
 	}
 	.index-bar__title {

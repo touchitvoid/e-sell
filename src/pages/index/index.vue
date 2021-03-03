@@ -114,7 +114,7 @@
 		data() {
 			return {
 				bar: {},
-				page: 'me',
+				page: 'home',
 				accountPanelShow: false,
 				title: {
 					'me': '个人中心',
