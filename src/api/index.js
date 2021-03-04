@@ -7,8 +7,16 @@ const api = {
 }
 const pay = {
   status: '/api/payment/query'
-  
 }
+const transaction = {
+  list: '/api/transaction/lists',
+  type: '/api/transaction/trans_type'
+}
+
+// 获取交易明细
+export const GetTransactionList = params => fly.post(transaction.list, params) 
+// 获取交易类型
+export const GetTransactionType = params => fly.post(transaction.type, params)
 
 // login
 export const PostLogin = params => fly.post('/api/auth/login', params)

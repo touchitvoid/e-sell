@@ -3,7 +3,12 @@
     <status-bar title="筛选"></status-bar>
     <view class="screen-judge__card">
       <view class="screen-judge__title">交易状态</view>
-      <view class="screen-judge" v-for="(status, key) in tradeStatus" :key="key">
+      <view 
+        class="screen-judge"
+        :class="{ checked: key == params.status }"
+        v-for="(status, key) in tradeStatus" :key="key"
+        @click="params.status = key"
+      >
         {{ status }}
       </view>
     </view>
@@ -12,8 +17,13 @@
     </view>
     <view class="screen-judge__card">
       <view class="screen-judge__title">交易类型</view>
-      <view class="screen-judge" v-for="(type, key) in tradeType" :key="key">
-        {{ type }}
+      <view
+        v-for="type in tradeType" :key="type.id"
+        class="screen-judge" 
+        :class="{ checked: type.id === params.type }"
+        @click.stop="params.type = type.id"
+        >
+        {{ type.name }}
       </view>
     </view>
     <view class="divider-16"></view>
@@ -27,6 +37,7 @@
 <script>
 import StatusBar from '@/components/custom-status-bar'
 import CustomLine from '@/components/custom-line.vue'
+import { GetTransactionType } from '@/api'
 
 export default {
   name: "screen",
@@ -37,24 +48,28 @@ export default {
   data () {
     return {
       tradeStatus: {
-        0: '交易成功',
-        1: '已申请退款',
-        2: '退款中',
-        3: '退款成功'
+        1: '交易成功',
+        2: '已申请退款',
+        3: '退款中',
+        4: '退款成功'
       },
-      tradeType: {
-        0: '支付：微信',
-        1: '支付：支付宝',
-        2: '支付：银行卡',
-        3: '调账支出',
-        4: '提现支出',
-        5: '授权收款支出',
-        6: '退款：微信',
-        7: '退款：支付宝',
-        8: '退款：银行卡',
-        9: '调账收入',
-        9: '授权收款收入',
-        9: '网银转账'
+      params: {
+        type: '',
+        status: ''
+      },
+      tradeType: []
+    }
+  },
+  onLoad() {
+    this.getTypes()
+  },
+  methods: {
+    async getTypes() {
+      try {
+        const { data } = await GetTransactionType()
+        this.tradeType = data
+      } catch (error) {
+        console.log(error)
       }
     }
   }
@@ -101,6 +116,10 @@ export default {
       border-radius: 44rpx;
       margin-bottom: 24rpx;
       border: 1px solid @border-color;
+      &.checked {
+        background-color: @primary-color;
+        color: hsla(0, 0%, 100%, 8);
+      }
     }
   }
 </style>

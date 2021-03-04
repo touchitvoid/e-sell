@@ -1,8 +1,8 @@
 <template>
-  <view>
-    <status-bar title="记账明细"></status-bar>
+  <load-conatiner>
+    <status-bar title="交易明细"></status-bar>
     <view class="transaction-judge">
-      <view v-for="(str, key) in tabs" :key="key">
+      <view :class="{ checked: key == params.status }" @click="handleChangeTab(key)" v-for="(str, key) in tabs" :key="key">
         {{ str }}
       </view>
       <view @click="$link('/pages/tool/screen')">
@@ -27,7 +27,7 @@
       </view>
     </view>
     <view class="transaction-list">
-      <view class="transaction-card">
+      <view v-for="(item, index) in list" :key="index" class="transaction-card">
         <view class="transaction-info">
           <view class="transaction-date">
             <view>
@@ -64,7 +64,8 @@
         </view>
       </view>
     </view>
-  </view>
+    <no-data v-if="!list.length"></no-data>
+  </load-conatiner>
 </template>
 
 <script>
@@ -73,11 +74,16 @@ import AlipayIcon from '@/static/icons/alipay.png'
 import WechatIcon from '@/static/icons/wechat.png'
 import TradeIcon from '@/static/icons/trade.png'
 import BankIcon from '@/static/icons/bank.png'
+import LoadContainer from '@/components/load-container'
+import NoData from '@/components/no-data'
+import { GetTransactionList } from '@/api'
 
 export default {
   name: "transaction-detail",
   components: {
-    StatusBar
+    StatusBar,
+    LoadContainer,
+    NoData
   },
   data () {
     return {
@@ -86,9 +92,32 @@ export default {
       TradeIcon,
       BankIcon,
       tabs: {
-        0: '全部',
+        '0': '全部',
         1: '交易成功',
-        2: '退款成功'
+        4: '退款成功'
+      },
+      params: {
+        page: 1,
+        pageSize: 10,
+        status: 0
+      },
+      list: []
+    }
+  },
+  onLoad() {
+    this.getList()
+  },
+  methods: {
+    handleChangeTab(status) {
+      this.params.status = status
+      this.getList()
+    },
+    async getList() {
+      try {
+        const { data } = await GetTransactionList(this.params)
+        this.list = data
+      } catch (error) {
+        console.log(error)
       }
     }
   }
@@ -109,9 +138,14 @@ export default {
     box-sizing: border-box;
     padding: 0 34rpx;
     view {
+      height: inherit;
       display: -webkit-flex;
       align-items: center;
       padding: 0 16rpx;
+      &.checked {
+        color: #2A58E1;
+        border-bottom: 2px solid #2A58E1;
+      }
     }
     image {
       width: 18rpx;

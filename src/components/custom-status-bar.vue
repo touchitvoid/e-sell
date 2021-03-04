@@ -49,6 +49,9 @@ export default {
     height: 160rpx;
     overflow-y: hidden;
     transition: all .3s;
+    position: sticky;
+    top: 0;
+    left: 0;
     .status-bar__background {
       width: 100%;
       position: relative;
