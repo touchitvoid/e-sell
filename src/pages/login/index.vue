@@ -72,6 +72,8 @@ export default {
     align-items: center;
     justify-content: center;
     padding: 12rpx 0 48rpx 0;
+    position: relative;
+    z-index: 99;
     image {
       width: 388rpx;
     }
@@ -84,6 +86,8 @@ export default {
     border-radius: 32rpx;
     box-sizing: border-box;
     padding: 48rpx;
+    position: relative;
+    z-index: 99;
     button, input {
       width: 100%;
       height: 80rpx;

@@ -1,7 +1,9 @@
 <template>
   <view class="status-bar__full" :style="{
     height: `${bar.top+bar.height+2}px`
-  }">
+  }"
+  :class="{ overflow }"
+  >
 		<image class="index-bar__background" mode="widthFix" src="@/static/images/background.png" >
     <view
       class="index-bar__title"
@@ -29,6 +31,10 @@ export default {
     arrowShow: {
       type: Boolean,
       default: true
+    },
+    overflow: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -53,8 +59,10 @@ export default {
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 999;
-    overflow: hidden;
+    &.overflow {
+      overflow: hidden;
+      z-index: 999;
+    }
   }
 	/* 状态栏背景图 */
 	.index-bar__background {

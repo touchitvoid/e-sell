@@ -31,23 +31,25 @@
         <view class="transaction-info">
           <view class="transaction-date">
             <view>
-              <image mode="widthFix" :src="AlipayIcon"/>
-              肥城帝王洁具
+              <image mode="widthFix" :src="item.trans_type === 1? WechatIcon : AlipayIcon"/>
+              {{ item.distributor && item.distributor.name }}
             </view>
-            2020-12-21 21:46:06
+            {{ item[statusTime[item.status]] }}
           </view>
           <view class="transaction-amount">
             <view class="transation-amount__total">
-              <text>¥</text>12,000.00
+              <text>¥</text>{{ item.amount }}
             </view>
             <view class="transation-amount__other">
               <view>
                 手续费
-                <view>27.60</view>
+                <view>
+                  {{ item.charges_amount }}
+                </view>
               </view>
               <view>
                 应结算
-                <view>27.60</view>
+                <view>{{ item.should_amount }}</view>
               </view>
             </view>
           </view>
@@ -55,11 +57,11 @@
         <view class="transaction-remarks">
           <view>
             交易对手
-            <view>5fd707a566a53a045a2dc6fe</view>
+            <view>{{ item.traders || '未知' }}</view>
           </view>
           <view>
             备注
-            <view>收款</view>
+            <view>{{ item.remark || '无' }}</view>
           </view>
         </view>
       </view>
@@ -95,6 +97,10 @@ export default {
         '0': '全部',
         1: '交易成功',
         4: '退款成功'
+      },
+      statusTime: {
+        1: 'pay_time',
+        4: 'refund_time'
       },
       params: {
         page: 1,

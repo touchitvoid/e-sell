@@ -10,9 +10,12 @@ const pay = {
 }
 const transaction = {
   list: '/api/transaction/lists',
-  type: '/api/transaction/trans_type'
+  type: '/api/transaction/trans_type',
+  total: '/api/transaction/total'
 }
 
+// 获取交易汇总信息
+export const GetTransactionTotal = params => fly.post(transaction.total, params)
 // 获取交易明细
 export const GetTransactionList = params => fly.post(transaction.list, params) 
 // 获取交易类型
