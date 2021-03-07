@@ -1,6 +1,6 @@
 <template>
   <view>
-    <status-bar></status-bar>
+    <status-bar title="交易汇总"></status-bar>
     <view class="statistics">
       <view class="statistics-judge">
         <view
@@ -16,13 +16,13 @@
         <view class="statistics-data__item">
           <view>
             <text>本年支出</text>
-            ¥12,345,678.89
+            ¥{{ totalData.out_amount }}
           </view>
         </view>
         <view class="statistics-data__item">
           <view>
             <text>本年收入</text>
-            ¥12,345,678.89
+            ¥{{ totalData.in_amount }}
           </view>
         </view>
       </view>
@@ -42,31 +42,38 @@
     <view class="summary-title padding-16">交易汇总</view>
     <view class="divider-12"></view>
     <view class="padding-16">
-      <view class="summary-card" v-for="num in 2" :key="num">
-        <view class="summary-card__date"><text>2020-12</text>交易金额</view>
+      <view class="summary-card" v-for="(item, index) in totalData.list" :key="index">
+        <view class="summary-card__date"><text>{{ item.date }}</text>交易金额</view>
         <view class="summary-card__data">
-          2笔交易
-          <view>¥12,000.00</view>
+          {{ item.trans_num || 0 }}笔交易
+          <view>¥{{ item.amount }}</view>
         </view>
         <view class="summary-card__info">
           <view class="summary-data">
             应结算总金额
-            <view>11,987.40</view>
+            <view>
+              {{ item.should_amount || 0 }}
+            </view>
           </view>
           <view class="summary-data">
             结算总手续费
-            <view>11,987.40</view>
+            <view>{{ item.charges_amount || 0 }}</view>
           </view>
           <view class="summary-data">
             总退款金额
-            <view>11,987.40</view>
+            <view>
+              {{ item.refund_amount }}
+            </view>
           </view>
           <view class="summary-data">
             实际结算金额
-            <view>11,987.40</view>
+            <view>
+              {{ item.actual_amount }}
+            </view>
           </view>
         </view>
       </view>
+      <no-data v-if="totalData.list && totalData.list.length === 0"></no-data>
     </view>
   </view>
 </template>
@@ -74,6 +81,8 @@
 <script>
 import StatusBar from "@/components/custom-status-bar"
 import uCharts from "@/utils/charts.js"
+import NoData from '@/components/no-data'
+import { GetTransactionTotal } from "@/api";
 
 let canva = null
 
@@ -81,6 +90,7 @@ export default {
   name: "statistics",
   components: {
     StatusBar,
+    NoData
   },
   data() {
     return {
@@ -88,29 +98,50 @@ export default {
       cWidth: 313,
       cHeight: 188,
       pixelRatio: 1,
+      params: {
+        date_type: 1,
+        date: 2021,
+      },
+      totalData: {
+        in_amount: 0,
+        out_amount: 0,
+        list: [],
+        data: []
+      }
     }
   },
-  async onReady() {
-    const el = uni.createSelectorQuery().select(".charts-box")
-    el.boundingClientRect((data) => {
-      console.log(data)
-      const cWidth = data.width
-      const pixel = (cWidth / this.cWidth).toFixed(1)
-      this.cWidth = cWidth
-      this.cHeight = +(this.cHeight * pixel).toFixed(0)
-      this.showLine({
-        categories: [1, 2, 4, 6, 8, 10, 12],
-        series: [
-          {
-            name: "测试数据",
-            data: [35, 20, 25, 37, 4, 20, 100],
-            color: "#2b58e1",
-          }
-        ],
-      })
-    }).exec()
+  onLoad() {
+    this.getTotalData()
   },
   methods: {
+    async getTotalData() {
+      try {
+        const { data } = await GetTransactionTotal(this.params)
+        this.totalData = data
+        const el = uni.createSelectorQuery().select(".charts-box")
+        const categories = data.list.map(item => item.date)
+        const chartData = data.list.map(item => item.amount)
+        el.boundingClientRect((data) => {
+          console.log(data)
+          const cWidth = data.width
+          const pixel = (cWidth / this.cWidth).toFixed(1)
+          this.cWidth = cWidth
+          this.cHeight = +(this.cHeight * pixel).toFixed(0)
+          this.showLine({
+            categories,
+            series: [
+              {
+                name: "交易金额",
+                data: chartData,
+                color: "#2b58e1",
+              }
+            ],
+          })
+        }).exec()
+      } catch (error) {
+        console.log(error)
+      }
+    },
     touchLine(e) {
       console.log(canva)
       canva.showToolTip(e, {
