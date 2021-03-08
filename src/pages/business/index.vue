@@ -1,6 +1,6 @@
 <template>
   <view>
-    <full-status-bar title="商户列表"></full-status-bar>
+    <full-status-bar title="商户列表" overflow></full-status-bar>
     <full-background></full-background>
     <view class="search padding-16">
       <view class="search-describe">
@@ -17,6 +17,31 @@
     </view>
     <view class="divider-16"></view>
     <view class="padding-16">
+      <view class="business-card" v-for="info in list" :key="info.id">
+        <view class="business-card__content">
+          <view class="business-card__title">
+            {{info.name + info.wx_nickname}}
+            <text>{{ info.id }}</text>
+          </view>
+          <view>负责人姓名: {{ info.real_name }}</view>
+          <view>手机号码: {{ info.telephone }}</view>
+          <view>子账薄账号: {{ info.bank_sub_account || '' }}</view>
+        </view>
+        <view class="business-card__controller">
+          <view>
+            <image mode="widthFix" src="@/static/icons/qrcode.png" />
+            固定支付码
+          </view>
+          <view>
+            <image mode="widthFix" src="@/static/icons/document.png" />
+            交易明细
+          </view>
+          <view>
+            <image mode="widthFix" src="@/static/icons/user.png" />
+            管理用户
+          </view>
+        </view>
+      </view>
       <view class="business-card" v-for="info in list" :key="info.id">
         <view class="business-card__content">
           <view class="business-card__title">
