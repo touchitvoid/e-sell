@@ -14,6 +14,8 @@ const transaction = {
   total: '/api/transaction/total'
 }
 
+export const BindWechat = params => fly.post('/api/distributor/bind/wx', params)
+
 // 获取交易汇总信息
 export const GetTransactionTotal = params => fly.post(transaction.total, params)
 // 获取交易明细

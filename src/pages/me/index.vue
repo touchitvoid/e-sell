@@ -20,7 +20,7 @@
       <custom-line title="密码" content="已有密码" @click.native="$link('/pages/me/password')"></custom-line>
       <custom-line title="手机号码" :content="info.telephone" @click.native="$link('/pages/me/phone')"></custom-line>
       <custom-line title="邮箱" :content="info.email" @click.native="$link('/pages/me/email')"></custom-line>
-      <custom-line title="微信" :content="info.wx_nickname" @click.native="$link('/pages/me/wechat')"></custom-line>
+      <custom-line title="微信" :content="info.wx_nickname" @click.native="beforeBind"></custom-line>
     </view>
     <view class="divider-16"></view>
     <custom-line @click.native="$link('/pages/user/manage')" title="用户管理" :contentShow="false"></custom-line>
@@ -41,7 +41,7 @@
 import defaultAvatar from '@/static/images/default-avatar.png'
 import CustomLine from '@/components/custom-line.vue'
 import CustomSwitch from '@/components/custom-switch.vue'
-import { GetUcInfo } from '@/api'
+import { GetUcInfo, BindWechat } from '@/api'
 
 export default {
   name: "me",
@@ -60,6 +60,46 @@ export default {
     this.getUcInfo()
   },
   methods: {
+    beforeBind() {
+      uni.showModal({
+        title: '提示',
+        content: '确定要进行微信绑定吗？',
+        success: (res) => {
+          if (res.confirm) {
+            this.bindWechat()
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        }
+      })
+    },
+    bindWechat() {
+      wx.login({
+        success: ({ code }) => {
+          wx.getUserInfo({
+            success: async res => {
+              // console.log(res.iv)
+              try {
+                const { data } = await BindWechat({
+                  code,
+                  iv: res.iv,
+                  encryptedData: res.encryptedData
+                })
+                if (data) {
+                  this.$toast('绑定成功')
+                  this.getUcInfo()
+                }
+              } catch (error) {
+                console.log(error)
+              }
+            },
+            fail: error => {
+              console.log(error)
+            }
+          })
+        }
+      })
+    },
     async getUcInfo() {
       try {
         const { data } = await GetUcInfo()
