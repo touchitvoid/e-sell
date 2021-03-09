@@ -14,6 +14,8 @@ const transaction = {
   total: '/api/transaction/total'
 }
 
+// 缓存微信code
+export const CacheWxCode = params => fly.post('/api/auth/wx/code', params)
 export const BindWechat = params => fly.post('/api/distributor/bind/wx', params)
 
 // 获取交易汇总信息

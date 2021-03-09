@@ -111,6 +111,7 @@ export default {
     async getLevelList() {
       try {
         const { data } = await GetLevelList()
+        if (!data.length) return
         this.sub_cd_id = data[0].id
         this.getList()
       } catch (error) {

@@ -20,12 +20,16 @@ fly.interceptors.response.use(response => {
     })
   }
   uni.hideLoading()
+  
   if (!response.data.data) {
-    uni.showToast({
-      title: response.data.error,
-      icon: "none"
-    })
-    console.log('api error')
+    const result = response.request.body && response.request.body.toast
+    console.log(result)
+    if (!result) {
+      uni.showToast({
+        title: response.data.error,
+        icon: "none"
+      })
+    }
     throw error('error')
   }
   return response.data
