@@ -4,7 +4,7 @@
     <view class="statistics">
       <view class="statistics-judge">
         <view
-          >2020
+          >2021
           <img mode="widthFix" src="@/static/icons/arrow-bottom.svg" />
         </view>
         <view

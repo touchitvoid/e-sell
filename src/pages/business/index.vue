@@ -32,32 +32,7 @@
             <image mode="widthFix" src="@/static/icons/qrcode.png" />
             固定支付码
           </view>
-          <view>
-            <image mode="widthFix" src="@/static/icons/document.png" />
-            交易明细
-          </view>
-          <view>
-            <image mode="widthFix" src="@/static/icons/user.png" />
-            管理用户
-          </view>
-        </view>
-      </view>
-      <view class="business-card" v-for="info in list" :key="info.id">
-        <view class="business-card__content">
-          <view class="business-card__title">
-            {{info.name + info.wx_nickname}}
-            <text>{{ info.id }}</text>
-          </view>
-          <view>负责人姓名: {{ info.real_name }}</view>
-          <view>手机号码: {{ info.telephone }}</view>
-          <view>子账薄账号: {{ info.bank_sub_account || '' }}</view>
-        </view>
-        <view class="business-card__controller">
-          <view>
-            <image mode="widthFix" src="@/static/icons/qrcode.png" />
-            固定支付码
-          </view>
-          <view>
+          <view @click="viewTradeDetail(info)">
             <image mode="widthFix" src="@/static/icons/document.png" />
             交易明细
           </view>
@@ -95,6 +70,10 @@ export default {
     this.getLevelList()
   },
   methods: {
+    viewTradeDetail(info) {
+      console.log(info)
+      this.$link(`/pages/transaction/detail?subId=${info.id}`)
+    },
     async getList() {
       try {
         const { data } =  await GetCustomerList({ 

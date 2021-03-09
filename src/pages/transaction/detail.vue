@@ -11,18 +11,18 @@
       </view>
     </view>
     <view class="transaction-statistics">
-      <view class="transaction-statistics__judge">
-        本月
+      <view class="transaction-statistics__judge" @click="pickerShow = true">
+        {{ pickerValue.value || '本' }}{{ pickerValue.type === 1? '年': '月' }}
         <img src="@/static/icons/triangle-bottom.svg" />
       </view>
       <view class="transaction-statistics__data">
         <view>
-          本月支出
-          <text>¥12,345,678.89</text>
+          本{{ pickerValue.type === 1? '年': '月' }}支出
+          <text>¥{{ totalData.out_amount || 0 }}</text>
         </view>
         <view>
-          本月收入
-          <text>¥12,345,678.89</text>
+          本{{ pickerValue.type === 1? '年': '月' }}收入
+          <text>¥{{ totalData.in_amount || 0 }}</text>
         </view>
       </view>
     </view>
@@ -67,6 +67,13 @@
       </view>
     </view>
     <no-data v-if="!list.length"></no-data>
+    <custom-picker 
+      v-if="pickerShow"
+      v-model="pickerValue"
+      @close="pickerShow = false"
+      @change="changeDateType"
+    >
+    </custom-picker>
   </load-conatiner>
 </template>
 
@@ -78,14 +85,16 @@ import TradeIcon from '@/static/icons/trade.png'
 import BankIcon from '@/static/icons/bank.png'
 import LoadContainer from '@/components/load-container'
 import NoData from '@/components/no-data'
-import { GetTransactionList } from '@/api'
+import { GetTransactionList, GetTransactionTotal } from '@/api'
+import CustomPicker from '@/components/custom-picker'
 
 export default {
   name: "transaction-detail",
   components: {
     StatusBar,
     LoadContainer,
-    NoData
+    NoData,
+    CustomPicker
   },
   data () {
     return {
@@ -93,6 +102,13 @@ export default {
       WechatIcon,
       TradeIcon,
       BankIcon,
+      pickerShow: false,
+      pickerValue: {
+        type: 2,
+        value: new Date().getMonth()+1,
+        month: new Date().getMonth()+1,
+        year: new Date().getFullYear()
+      },
       tabs: {
         '0': '全部',
         1: '交易成功',
@@ -104,23 +120,54 @@ export default {
       },
       params: {
         page: 1,
-        pageSize: 10,
+        pageSize: 999,
         status: 0
       },
-      list: []
+      list: [],
+      totalData: {
+        out_amount: 0,
+        in_amount: 0
+      }
     }
   },
-  onLoad() {
+  onLoad(option) {
+    if (option.subId) {
+      this.params.sub_cd_id = +option.subId
+    }
     this.getList()
+    this.getTotalData()
   },
   methods: {
+    changeDateType() {
+      // 修改日期
+      console.log(this.pickerValue)
+      this.getTotalData()
+      this.getList()
+    },
     handleChangeTab(status) {
       this.params.status = status
       this.getList()
     },
+    async getTotalData() {
+      try {
+        const { type, month, year } = this.pickerValue
+        const { data } = await GetTransactionTotal({
+          date_type: type,
+          date: type === 1 ? year : `${year}-${month}`
+        })
+        this.totalData = data
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async getList() {
       try {
-        const { data } = await GetTransactionList(this.params)
+        const { type, month, year } = this.pickerValue
+        const { data } = await GetTransactionList({
+          ...this.params,
+          date_type: type,
+          date: type === 1 ? year : `${year}-${month}`
+        })
         this.list = data
       } catch (error) {
         console.log(error)
