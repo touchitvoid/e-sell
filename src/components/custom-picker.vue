@@ -167,6 +167,7 @@ export default {
             &.selected {
               background-color: white;
               color: @title-color;
+              border-radius: 4rpx;
             }
           }
         }
