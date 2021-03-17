@@ -3,26 +3,26 @@
     <status-bar title="交易汇总"></status-bar>
     <view class="statistics">
       <view class="statistics-judge">
-        <view
-          >2021
+        <view @click="pickerShow = true">
+          {{ selectDate }}
           <img mode="widthFix" src="@/static/icons/arrow-bottom.svg" />
         </view>
-        <view
-          >筛选
+        <view @click="handleScreen">
+          筛选
           <img mode="widthFix" src="@/static/icons/arrow-bottom.svg" />
         </view>
       </view>
       <view class="statistics-data">
         <view class="statistics-data__item">
           <view>
-            <text>本年支出</text>
-            ¥{{ totalData.out_amount }}
+            <text>本{{ pickerValue.type === 1? '年': '月' }}支出</text>
+            ¥{{ totalData.out_amount || 0 }}
           </view>
         </view>
         <view class="statistics-data__item">
           <view>
-            <text>本年收入</text>
-            ¥{{ totalData.in_amount }}
+            <text>本{{ pickerValue.type === 1? '年': '月' }}收入</text>
+            ¥{{ totalData.in_amount || 0 }}
           </view>
         </view>
       </view>
@@ -41,7 +41,7 @@
     <view class="divider-16"></view>
     <view class="summary-title padding-16">交易汇总</view>
     <view class="divider-12"></view>
-    <view class="padding-16">
+    <view class="padding-16" style="padding-bottom: 20px">
       <view class="summary-card" v-for="(item, index) in totalData.list" :key="index">
         <view class="summary-card__date"><text>{{ item.date }}</text>交易金额</view>
         <view class="summary-card__data">
@@ -75,6 +75,18 @@
       </view>
       <no-data v-if="totalData.list && totalData.list.length === 0"></no-data>
     </view>
+    <custom-picker 
+      v-if="pickerShow"
+      v-model="pickerValue"
+      @close="pickerShow = false"
+      @change="changeDateType"
+    >
+    </custom-picker>
+    <!-- <screen
+      v-show="screenShow"
+      @primary="screenShow = false"
+    >
+    </screen> -->
   </view>
 </template>
 
@@ -83,6 +95,8 @@ import StatusBar from "@/components/custom-status-bar"
 import uCharts from "@/utils/charts.js"
 import NoData from '@/components/no-data'
 import { GetTransactionTotal } from "@/api";
+import CustomPicker from '@/components/custom-picker'
+// import Screen from '@/components/screen'
 
 let canva = null
 
@@ -90,7 +104,9 @@ export default {
   name: "statistics",
   components: {
     StatusBar,
-    NoData
+    NoData,
+    CustomPicker,
+    // Screen
   },
   data() {
     return {
@@ -98,25 +114,44 @@ export default {
       cWidth: 313,
       cHeight: 188,
       pixelRatio: 1,
-      params: {
-        date_type: 1,
-        date: 2021,
-      },
       totalData: {
         in_amount: 0,
         out_amount: 0,
         list: [],
         data: []
-      }
+      },
+      pickerShow: false,
+      screenShow: false,
+      pickerValue: {
+        type: 1,
+        value: new Date().getFullYear(),
+        month: new Date().getMonth()+1,
+        year: new Date().getFullYear()
+      },
+      params: {}
     }
   },
-  onLoad() {
+  onLoad(option) {
+    if (option.subId) {
+      this.params.sub_cd_id = +option.subId
+    }
     this.getTotalData()
   },
   methods: {
+    handleScreen() {
+      this.$link('/pages/tool/business?page=statistics')
+    },
+    changeDateType() {
+      this.getTotalData()
+    },
     async getTotalData() {
       try {
-        const { data } = await GetTransactionTotal(this.params)
+        const { type, month, year } = this.pickerValue
+        const { data } = await GetTransactionTotal({
+          date_type: type,
+          date: type === 1 ? year : `${year}-${month}`,
+          ...this.params
+        })
         this.totalData = data
         const el = uni.createSelectorQuery().select(".charts-box")
         const categories = data.list.map(item => item.date)
@@ -201,6 +236,12 @@ export default {
       })
     },
   },
+  computed: {
+    selectDate() {
+      const { type, year, month } = this.pickerValue
+      return type === 1 ? year : `${year}-${month}`
+    }
+  }
 }
 </script>
 

@@ -1,25 +1,33 @@
 <template>
   <view>
-    <full-status-bar title="一级商户"></full-status-bar>
+    <full-status-bar title="一级商户" overflow></full-status-bar>
+    <full-background></full-background>
     <view class="search padding-16">
       <input
+        v-model="search"
+        @blur="getList"
+        @confirm="getList"
         placeholder="输入名称、手机号码、姓名进行搜索"
         placeholder-style="color: #C1C7D0;"
       />
     </view>
-    <view class="padding-16">
-      <view class="business-card" v-for="business in result" :key="business">
+    <view class="padding-16 business-list">
+      <view
+        v-for="item in result" :key="item.id"
+        class="business-card"
+        @click="onScreen(item)"
+      >
         <view class="business-info">
           <image class="business-avatar" :src="defaultAvatar" />
-          <view class="business-info__show" @click="$link('/pages/me/username')">
+          <view class="business-info__show">
             <view class="business-type">
               入驻商户
             </view>
             <view class="business-name">
-              内蒙锡盟二连浩特帝王吴军
+              {{ item.name }}{{ item.real_name }}
             </view>
             <view class="business-code">
-              3421984853953369
+              {{ item.id }}
             </view>
           </view>
         </view>
@@ -36,6 +44,7 @@ import FullStatusBar from "@/components/full-status-bar.vue"
 import defaultAvatar from '@/static/icons/business-avatar.png'
 import Png404 from '@/static/images/404.png'
 import PngNull from '@/static/images/null.png'
+import { GetCustomerList } from '@/api'
 
 export default {
   name: "business",
@@ -47,16 +56,38 @@ export default {
       defaultAvatar,
       Png404,
       PngNull,
-      result: []
+      result: [],
+      search: '',
+      page: ''
     }
   },
+  onLoad(option) {
+    this.page = option.page
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      try {
+        const { data } = await GetCustomerList()
+        this.result = data
+      } catch (error) {
+        conosole.log(error)
+      }
+    },
+    onScreen(store) {
+      this.$link(`/pages/transaction/${this.page}?subId=${store.id}`)
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import url("@/color.less");
 
-
+.business-list {
+  width: 100%;
+  // overflow-y: auto;
+}
 .image-show {
   width: 480rpx;
   max-width: 80%;

@@ -27,6 +27,6 @@ export default {
   .image-show {
     width: 480rpx;
     max-width: 80%;
-    margin-top: 240rpx;
+    margin-top: 200rpx;
   }
 </style>

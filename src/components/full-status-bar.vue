@@ -83,6 +83,7 @@ export default {
 		align-items: center;
 		justify-content: center;
 		color: white;
+    font-size: 31rpx;
     .status-bar__controller {
       width: 30rpx;
       position: absolute;

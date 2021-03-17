@@ -18,7 +18,7 @@
 		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
 				<view class="user-info__name flex-ai--c" @click="accountPanelShow = true">
-					{{ info.name||'' }}
+					{{ info.name || '' }}<span v-if="info.wx_nickname">（{{ info.wx_nickname }}）</span>
 					<image src="@/static/images/arrow-down.png"/>
 				</view>
 				<image @click="page = 'qrcode'" class="user-info__qrcode" src="@/static/images/qrcode.png"/>
@@ -26,7 +26,8 @@
 			<view class="account-info padding-16">
 				<view class="account-info__title">回款账户信息</view>
 				<view class="account-info__line">
-				企业名称：{{ info.customer_name||'' }}
+				<!-- 企业名称：{{ info.customer_name||'' }} -->
+				企业名称：帝欧家居股份有限公司
 				</view>
 				<view class="account-info__line flex-ai--c">
 					子账簿账号：{{ info.bank_sub_account||'未知' }} <button class="copy" @click.stop="onCopy">复制</button>
@@ -94,7 +95,7 @@
 			</view>
 		</view>
 		<me-page v-if="page === 'me'"></me-page>
-		<qrcode v-if="page === 'qrcode'"></qrcode>
+		<qrcode v-if="page === 'qrcode'" :info="info"></qrcode>
 		<view class="bottom-line"></view>
 		<fixed-bottom-nav v-if="page !== 'qrcode'" @switch="page = $event" :page="page"></fixed-bottom-nav>
 		<pop-panel v-if="accountPanelShow" @success="accountPanelShow = false" @close="accountPanelShow = false"></pop-panel>
@@ -118,7 +119,7 @@
 				accountPanelShow: false,
 				title: {
 					'me': '个人中心',
-					'home': '交E销',
+					'home': '帝欧微分销',
 					'qrcode': '固定收款码'
 				},
 				user: {
@@ -196,6 +197,7 @@
 		align-items: center;
 		justify-content: center;
 		color: white;
+		font-size: 33rpx;
 		.status-bar__controller {
 			width: 30rpx;
 			position: absolute;

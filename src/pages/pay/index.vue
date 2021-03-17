@@ -4,7 +4,7 @@
     <view class="pay-info">
       <image :src="info.wx_avatar_url" />
       <view class="pay-info__name">
-        {{ info.name || '未知' }}（{{ info.username|| '未知' }}）
+        {{ info.name || '未知' }}（{{ info.wx_nickname|| '未知' }}）
         <view>{{ info.customer_name }}</view>
       </view>
     </view>
@@ -42,7 +42,7 @@
 import StatusBar from "@/components/custom-status-bar"
 import PopPanel from "@/components/pop-panel"
 import PayCode from "@/components/pay-code"
-import { Payment, GetDistributorInfo, GetPayStatus } from "@/api"
+import { Payment, GetDistributorInfo, GetPayStatus, CacheWxCode } from "@/api"
 import { WxPay } from "@/utils"
 
 export default {
@@ -117,10 +117,8 @@ export default {
       })
     },
     wxPay() {
-      wx.login({
-        success: async (res) => {
-          this.form.code = res.code
-          console.log(res)
+      wx.checkSession({
+        success: async(r) => {
           try {
             const { data, error } = await Payment(this.form)
             // if (!data) return this.$toast(error)
@@ -131,6 +129,23 @@ export default {
             console.log(error)
           }
         },
+        fail: error => {
+           wx.login({
+            success: async ({ code }) => {
+              this.form.code = code
+              await CacheWxCode({ code })
+              try {
+                const { data } = await Payment(this.form)
+                // if (!data) return this.$toast(error)
+                WxPay(data.pay_package, () => {
+                  console.log("wxPay!")
+                })
+              } catch (error) {
+                console.log(error)
+              }
+            },
+          })
+        }
       })
     },
     // 付款码

@@ -23,7 +23,11 @@ export default {
   props: {
     title: {
       type: String,
-      default: "交E销"
+      default: "帝欧微分销"
+    },
+    customArrow: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -37,6 +41,7 @@ export default {
   },
   methods: {
     controller() {
+      if (this.customArrow) return this.$emit('controller')
       uni.navigateBack()
     }
   }
@@ -46,9 +51,9 @@ export default {
 <style lang="less" scoped>
   .status-bar {
     width: 100%;
-    height: 160rpx;
+    height: 176rpx;
     overflow-y: hidden;
-    transition: all .3s;
+    // transition: all .3s;
     position: sticky;
     top: 0;
     left: 0;
@@ -65,6 +70,7 @@ export default {
       align-items: center;
       justify-content: center;
       color: white;
+      font-size: 31rpx;
       .status-bar__controller {
         width: 30rpx;
         position: absolute;

@@ -3,7 +3,7 @@ import Fly from "flyio/dist/npm/wx"
 const fly = new Fly()
 
 fly.config.baseURL = "https://fenxiaoapi.qiyehoutai.com"
-fly.config.timeout= 50000;
+fly.config.timeout = 50000;
 
 fly.interceptors.request.use((config, promise)=>{
   //给所有请求添加自定义header

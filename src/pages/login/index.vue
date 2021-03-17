@@ -12,7 +12,7 @@
         <button @click="$toast('暂未开放')" class="login-wechat">微信一键登录</button>
         <view class="check-line">
           <image src="@/static/icons/checkbox.png"/>
-          阅读并同意<text>《交E销用户使用协议》《交E销个人隐私协议》</text>
+          阅读并同意<text>《帝欧微分销用户使用协议》《帝欧微分销个人隐私协议》</text>
         </view>
       </view>
     </view>

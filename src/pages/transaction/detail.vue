@@ -5,14 +5,14 @@
       <view :class="{ checked: key == params.status }" @click="handleChangeTab(key)" v-for="(str, key) in tabs" :key="key">
         {{ str }}
       </view>
-      <view @click="$link('/pages/tool/screen')">
+      <view @click="onScreen">
         筛选
         <img mode="widthFix" src="@/static/icons/arrow-bottom.svg" />
       </view>
     </view>
     <view class="transaction-statistics">
       <view class="transaction-statistics__judge" @click="pickerShow = true">
-        {{ pickerValue.value || '本' }}{{ pickerValue.type === 1? '年': '月' }}
+        {{ selectDate }}
         <img src="@/static/icons/triangle-bottom.svg" />
       </view>
       <view class="transaction-statistics__data">
@@ -74,6 +74,10 @@
       @change="changeDateType"
     >
     </custom-picker>
+    <screen
+      v-show="screenShow"
+      @primary="inputScreenParams"
+    ></screen>
   </load-conatiner>
 </template>
 
@@ -87,6 +91,7 @@ import LoadContainer from '@/components/load-container'
 import NoData from '@/components/no-data'
 import { GetTransactionList, GetTransactionTotal } from '@/api'
 import CustomPicker from '@/components/custom-picker'
+import Screen from '@/components/screen'
 
 export default {
   name: "transaction-detail",
@@ -94,7 +99,8 @@ export default {
     StatusBar,
     LoadContainer,
     NoData,
-    CustomPicker
+    CustomPicker,
+    Screen
   },
   data () {
     return {
@@ -127,7 +133,8 @@ export default {
       totalData: {
         out_amount: 0,
         in_amount: 0
-      }
+      },
+      screenShow: false // 筛选
     }
   },
   onLoad(option) {
@@ -138,6 +145,19 @@ export default {
     this.getTotalData()
   },
   methods: {
+    // 载入筛选参数
+    inputScreenParams(params = {}) {
+      this.params = {
+          ...this.params,
+          ...params
+      }
+      if (!params.status) this.params.status = 0
+      this.getList()
+      this.screenShow = false
+    },
+    onScreen() {
+      this.screenShow = true
+    },
     changeDateType() {
       // 修改日期
       console.log(this.pickerValue)
@@ -152,6 +172,7 @@ export default {
       try {
         const { type, month, year } = this.pickerValue
         const { data } = await GetTransactionTotal({
+          ...this.params,
           date_type: type,
           date: type === 1 ? year : `${year}-${month}`
         })
@@ -172,6 +193,12 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    }
+  },
+  computed: {
+    selectDate() {
+      const { type, year, month } = this.pickerValue
+      return type === 1 ? `${year}年` : `${year}年${month}月`
     }
   }
 }

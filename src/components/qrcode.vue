@@ -2,7 +2,7 @@
   <view class="padding-16">
     <view class="qrcode">
       <view class="qrcode-title">
-        肥城帝王洁具（董帅）
+        {{ info.name || '' }}<span v-if="info.wx_nickname">（{{ info.wx_nickname }}）</span>
         <view>帝欧家居股份有限公司</view>
       </view>
       <view class="qrcode-payment">
@@ -25,6 +25,12 @@
 <script>
 export default {
   name: "qrcode",
+  props: {
+    info: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {}
   },

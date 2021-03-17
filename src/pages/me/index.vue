@@ -95,7 +95,12 @@ export default {
     return {
       defaultAvatar,
       switchStatus: true,
-      info: {},
+      info: {
+        level: '',
+        name: '',
+        username: '',
+        bank_sub_account: ''
+      },
       userInfo: {},
     }
   },
@@ -151,7 +156,6 @@ export default {
     bindWechat() {
       wx.checkSession({
         success: async (r) => {
-          console.log(r)
           try {
             const { data } = await BindWechat({
               iv: this.userInfo.iv,
