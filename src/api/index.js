@@ -37,8 +37,21 @@ export const PatchPassword = params => fly.post('/api/distributor/password', par
 // 支付
 export const Payment = params => fly.post(api.pay, params)
 // 支付状态
-export const GetPayStatus = params => fly.post(pay.status, params)
+export const GetPayStatus = params => fly.post(pay.status, { ...params})
 // 获取客户列表
 export const GetCustomerList = params => fly.post(api.customer, params)
 // 获取业务层级数据
 export const GetLevelList = params => fly.post('/api/distributor/level/lists', params)
+// 订单退款
+export const Refund = params => fly.post('/api/transaction/refund', params)
+
+// 用户管理
+const user = {
+  list: '/api/distributor/user/lists',
+  create: '/api/distributor/user/create',
+  edit: '/api/distributor/user/modify'
+}
+
+export const GetUserList = params => fly.post(user.list, params)
+export const CreateUser = params => fly.post(user.create, params)
+export const EditUser = params => fly.post(user.edit, params)

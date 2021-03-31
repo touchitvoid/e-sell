@@ -18,31 +18,61 @@
 		<view class="padding-16" v-if="page === 'home'">
 			<view class="user-info">
 				<view class="user-info__name flex-ai--c" @click="accountPanelShow = true">
-					{{ info.name || '' }}<span v-if="info.wx_nickname">（{{ info.wx_nickname }}）</span>
+					{{ info.name || '' }}<span v-if="info.username">（{{ info.username }}）</span>
 					<image src="@/static/images/arrow-down.png"/>
 				</view>
-				<image @click="page = 'qrcode'" class="user-info__qrcode" src="@/static/images/qrcode.png"/>
+				<image v-if="role === 3" @click="page = 'qrcode'" class="user-info__qrcode" src="@/static/images/qrcode.png"/>
 			</view>
-			<view class="account-info padding-16">
-				<view class="account-info__title">回款账户信息</view>
-				<view class="account-info__line">
-				<!-- 企业名称：{{ info.customer_name||'' }} -->
-				企业名称：帝欧家居股份有限公司
+			<view class="account-info padding-16" :class="{ collectionMode: role !== 3 }">
+				<view class="collection" v-if="role !== 3">
+					<view>
+						今日收款{{ info.today_pay_num || 0 }}笔，共计
+					</view>
+					<view class="collection-amount">
+						<text>¥</text>{{ info.today_pay_amount || 0 }}
+					</view>
 				</view>
-				<view class="account-info__line flex-ai--c">
-					子账簿账号：{{ info.bank_sub_account||'未知' }} <button class="copy" @click.stop="onCopy">复制</button>
+				<template v-else>
+					<view class="account-info__title">回款账户信息</view>
+					<view class="account-info__line">
+					<!-- 企业名称：{{ info.customer_name || '' }} -->
+					企业名称：帝欧家居股份有限公司
+					</view>
+					<view class="account-info__line flex-ai--c">
+						子账簿账号：{{ info.bank_sub_account || '未知' }} <button class="copy" @click.stop="onCopy">复制</button>
+					</view> 
+				</template> 
+			</view>
+			<view v-if="role !== 3" class="statistics-line amount">
+				商户数量
+				<view>
+					{{ info.distributor_num || 0 }}
 				</view>
 			</view>
-			<view class="statistics-line number">
+			<!-- 普通商户 -->
+			<view v-if="role !== 3" class="statistics-line number">
+				本月逾期账单数
+				<view>
+					{{ info.month_overdue_num || 0 }}
+				</view>
+			</view>
+			<view v-else class="statistics-line number">
 				今日支付{{ info.today_pay_num||0 }}笔
 				<view>
 					<text>¥</text>{{ info.today_pay_amount||0 }}
 				</view>
 			</view>
-			<view class="statistics-line amount">
+			<view v-if="role === 3"  class="statistics-line amount">
 				子账薄累计
 				<view>
 					<text>¥</text>{{ info.cumulative_amount||0 }}
+				</view>
+			</view>
+			<!-- 普通商户显示 -->
+			<view v-if="role !== 3"  class="statistics-line danger">
+				本月预警账单数
+				<view>
+					<text>¥</text>{{ info.month_early_amount || 0 }}
 				</view>
 			</view>
 			<view class="controller">
@@ -50,12 +80,12 @@
 					class="controller-primary controller-item" 
 					@click.stop="controller">
 					<view class="controller-item__title">
-						{{ role === 2? '客户管理': '支付' }}
+						{{ role === 3? '支付': '商户管理' }}
 						<view class="controller-item__subtitle">
-							{{ role === 2? 'Account': 'Pay' }}
+							{{ role === 3? 'Pay': 'Account' }}
 						</view>
 					</view>
-					<image mode="widthFix" v-if="role === 2" src="@/static/images/user-model.png" />
+					<image mode="widthFix" v-if="role !== 3" src="@/static/images/user-model.png" />
 					<image v-else src="@/static/images/pay.png" />
 				</view>
 				<view class="controller-default">
@@ -80,7 +110,7 @@
 				</view>
 			</view>
 			<view class="divider-16"></view>
-			<view v-if="role === 3" class="controller">
+			<!-- <view v-if="role === 3" class="controller">
 				<view class="controller-default" style="width: 100%">
 					<view class="bill controller-item" @click.stop="$link('/pages/bill/pay')">
 						<view class="controller-item__title">
@@ -92,7 +122,7 @@
 						<image mode="widthFix" src="@/static/icons/bill.png" />
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<me-page v-if="page === 'me'"></me-page>
 		<qrcode v-if="page === 'qrcode'" :info="info"></qrcode>
@@ -146,22 +176,28 @@
 			}
 		},
 		onReady() {
-			this.role = uni.getStorageSync('role')
+			this.role = +uni.getStorageSync('role')
 		},
 		onShow() {
 			// 获取左上角胶囊位置信息
 			this.bar = wx.getMenuButtonBoundingClientRect()
+			this.getInfo()
 		},
 		methods: {
 			// 复制
 			onCopy() {
-				uni.showToast({
-					title: "复制成功"
-				})
+				uni.setClipboardData({
+					data: this.info.bank_sub_account,
+					success: function () {
+						uni.showToast({
+							title: "复制成功"
+						})
+					}
+				});
 			},
 			controller() {
-				console.log(this.role)
-				if (this.role === 2) return this.$link('/pages/business/index')
+				// console.log(this.role)
+				if (this.role !== 3) return this.$link('/pages/business/index')
 				this.$link('/pages/pay/index')
 			},
 			async getInfo() {
@@ -176,6 +212,29 @@
 <style lang="less" scoped>
 	@radius-px: 8px;
 
+	.collection {
+		height: 100%;
+		display: -webkit-flex;
+		flex-direction: column;
+		justify-content: space-between;
+		view:first-child {
+			font-size: 26rpx;
+			line-height: 36rpx;
+		}
+		.collection-amount {
+			color: #2A58E1;
+			font-size: 48rpx;
+			line-height: 44rpx;
+			display: -webkit-flex;
+			align-items: center;
+			font-weight: 700;
+			text {
+				font-size: 24rpx;
+				margin-right: 8rpx;
+				font-weight: bold;
+			}
+		}
+	}
 	.bottom-line {
 		width: 100%;
 		height: 124rpx;
@@ -198,6 +257,7 @@
 		justify-content: center;
 		color: white;
 		font-size: 33rpx;
+		font-weight: 500;
 		.status-bar__controller {
 			width: 30rpx;
 			position: absolute;
@@ -241,6 +301,10 @@
 		padding-top: 34rpx;
 		color: #262626;
 		margin-bottom: 20rpx;
+		&.collectionMode {
+			height: 192rpx;
+			padding-bottom: 34rpx;
+		}
 		.account-info__title {
 			font-weight: bold;
 			font-size: 34rpx;
@@ -281,6 +345,7 @@
 		border-radius: 8px;
 		position: relative;
 		overflow: hidden;
+		font-weight: 600;
 		&::after, &::before {
 			content: '';
 			position: absolute;
@@ -303,6 +368,7 @@
 			font-size: 40rpx;
 			display: -webkit-flex;
 			align-items: center;
+			font-weight: 600;
 			text { 
 				font-size: 30rpx;
 				margin-right: 4px;
@@ -315,6 +381,10 @@
 		&.amount {
 			background: linear-gradient(90deg, #DFEBFE 0%, #B2CCFF 100%);
 			color: #2A58E1;
+		}
+		&.danger {
+			background: linear-gradient(90deg, #FEDFDF 0%, #FFB2B2 100%);
+			color: #F5222D;
 		}
 
 	}
@@ -348,6 +418,8 @@
 					color: hsla(0 ,0%, 100%, .4);
 					margin-top: 4px;
 					line-height: 26rpx;
+					font-family: "Roboto";
+					font-weight: 400
 				}
 			}
 			image {

@@ -2,16 +2,20 @@
   <view>
     <status-bar title="用户管理"></status-bar>
     <view class="user-manage">
-      <view class="user-card">
+      <view
+        class="user-card"
+        v-for="card in listData"
+        :key="card.id"
+      >
         <image mode="widthFix" :src="UserIcon" />
         <view class="user-card__info">
-          <view>用户名：吴军</view>
-          <view>手机号：13664791828</view>
-          <view>微信昵称：9902001366413522</view>
+          <view>用户名：{{ card.username || '无' }}</view>
+          <view>手机号：{{ card.telephone || '无' }}</view>
+          <view>微信昵称：{{ card.wx_nickname || '无' }}</view>
         </view>
       </view>
     </view>
-    <fixed-tool @add="$link('/pages/user/create')"></fixed-tool>
+    <fixed-tool @add="toCreate"></fixed-tool>
   </view>
 </template>
 
@@ -19,6 +23,7 @@
 import StatusBar from '@/components/custom-status-bar'
 import UserIcon from '@/static/icons/user-card.png'
 import FixedTool from '@/components/fixed-tool.vue'
+import { GetUserList } from '@/api'
 
 export default {
   name: "user-manage",
@@ -28,7 +33,41 @@ export default {
   },
   data () {
     return {
-      UserIcon
+      UserIcon,
+      params: {
+        page: 1,
+        pageSize: 9999
+      },
+      total: 0,
+      listData: [],
+      subId: ''
+    }
+  },
+  onLoad(option) {
+    if (option.subId) {
+      this.subId = option.subId
+      this.params.sub_cd_id = option.subId
+    }
+  },
+  onShow() {
+    this.getList()
+  },
+  methods: {
+    toCreate() {
+      if (this.subId) {
+        this.$link('/pages/user/create?subId='+this.subId)
+        return
+      }
+      this.$link('/pages/user/create')
+    },
+    async getList() {
+      try {
+        const { data, code } = await GetUserList(this.params)
+        if (code !== 200) return
+        this.listData = data
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

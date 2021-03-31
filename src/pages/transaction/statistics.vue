@@ -208,7 +208,7 @@ export default {
           axisLine: true,
           calibration: true,
           format: (val) => {
-            return val + "月"
+            return val + "月" + '\n'
           },
         },
         yAxis: {

@@ -27,14 +27,18 @@
       </view>
     </view>
     <view class="transaction-list">
-      <view v-for="(item, index) in list" :key="index" class="transaction-card">
+      <view 
+        v-for="(item, index) in list" :key="index" 
+        class="transaction-card"
+        @click="viewOrderDetail(item)"
+      >
         <view class="transaction-info">
           <view class="transaction-date">
             <view>
-              <image mode="widthFix" :src="item.trans_type === 1? WechatIcon : AlipayIcon"/>
+              <image mode="widthFix" :src="item.icon"/>
               {{ item.distributor && item.distributor.name }}
             </view>
-            {{ item[statusTime[item.status]] }}
+            {{ item.status_name || '' }}
           </view>
           <view class="transaction-amount">
             <view class="transation-amount__total">
@@ -148,12 +152,21 @@ export default {
     // 载入筛选参数
     inputScreenParams(params = {}) {
       this.params = {
-          ...this.params,
-          ...params
+        ...this.params,
+        ...params
       }
       if (!params.status) this.params.status = 0
       this.getList()
       this.screenShow = false
+    },
+    viewOrderDetail(order) {
+      uni.setStorage({
+        key: 'orderInfo',
+        data: JSON.stringify(order),
+        success: () => {
+          this.$link('/pages/order/detail')
+        }
+      })
     },
     onScreen() {
       this.screenShow = true

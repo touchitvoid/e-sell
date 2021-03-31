@@ -71,6 +71,7 @@ export default {
       justify-content: center;
       color: white;
       font-size: 31rpx;
+      font-weight: 500;
       .status-bar__controller {
         width: 30rpx;
         position: absolute;

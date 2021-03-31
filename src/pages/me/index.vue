@@ -35,11 +35,11 @@
         :content="info.telephone"
         @click.native="$link('/pages/me/phone')"
       ></custom-line>
-      <custom-line
+      <!-- <custom-line
         title="邮箱"
         :content="info.email"
         @click.native="$link('/pages/me/email')"
-      ></custom-line>
+      ></custom-line> -->
       <custom-line
         title="微信"
         :content="info.wx_nickname"
@@ -56,6 +56,7 @@
     </view>
     <view class="divider-16"></view>
     <custom-line
+      v-if="is_super"
       @click.native="$link('/pages/user/manage')"
       title="用户管理"
       :contentShow="false"
@@ -102,6 +103,7 @@ export default {
         bank_sub_account: ''
       },
       userInfo: {},
+      is_super: uni.getStorageSync('is_super')
     }
   },
   components: {
@@ -156,6 +158,7 @@ export default {
     bindWechat() {
       wx.checkSession({
         success: async (r) => {
+          console.log('bind')
           try {
             const { data } = await BindWechat({
               iv: this.userInfo.iv,
@@ -190,6 +193,9 @@ export default {
                 iv: this.userInfo.iv,
                 encryptedData: this.userInfo.encryptedData,
               })
+              if (res.code === 2) {
+                this.$toast(res.error)
+              }
               if (res.data) {
                 this.$toast("绑定成功")
                 setTimeout(() => {

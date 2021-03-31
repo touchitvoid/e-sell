@@ -119,6 +119,14 @@
 			}
 		},
 		{
+			"path": "pages/tool/qrcode",
+			"style": {
+				"navigationBarTitleText": "固定收款码",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
 			"path": "pages/user/manage",
 			"style": {
 				"navigationBarTitleText": "用户管理",

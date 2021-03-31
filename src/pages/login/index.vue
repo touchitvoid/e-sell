@@ -12,7 +12,9 @@
         <button @click="$toast('暂未开放')" class="login-wechat">微信一键登录</button>
         <view class="check-line">
           <image src="@/static/icons/checkbox.png"/>
-          阅读并同意<text>《帝欧微分销用户使用协议》《帝欧微分销个人隐私协议》</text>
+          <view>
+            阅读并同意<text>《帝欧微分销用户使用协议》《帝欧微分销个人隐私协议》</text>
+          </view>
         </view>
       </view>
     </view>
@@ -50,6 +52,7 @@ export default {
       if (!data) return this.$toast(error)
       uni.setStorageSync('token', data.token)
       uni.setStorageSync('role', data.role)
+      uni.setStorageSync('is_super', data.is_super)
       // return uri
       this.$redirectTo('/pages/index/index')
     },

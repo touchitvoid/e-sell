@@ -12,8 +12,6 @@
       <view class="pay-input">
         <view>支付金额</view>
         <input
-          @confirm="openPayPanel"
-          @blur="openPayPanel"
           v-model="form.amount"
           type="digit"
           placeholder-style="color: #bfbfbf;"
@@ -27,6 +25,7 @@
         placeholder="请输入备注"
       />
     </view>
+    <button class="submit-btn" @click="openPayPanel">立即支付</button>
     <pop-panel 
       v-if="payPanel" 
       :options="payType" 
@@ -55,7 +54,8 @@ export default {
   data() {
     return {
       form: {
-        payment: "wx-mp"
+        payment: "wx-mp",
+        amount: ''
       },
       payPanel: false,
       payType: [
@@ -67,6 +67,35 @@ export default {
       showPayCode: false,
       info: {},
       timer: null
+    }
+  },
+  watch: {
+    'form.amount': {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (!oldVal) return
+        if (+newVal === 0 && (newVal.length > oldVal.length) && newVal == '00') {
+          this.$nextTick(() => {
+            this.form.amount = oldVal
+          })
+        }
+        // console.log(newVal.includes('.') && oldVal.includes('.') && oldVal === newVal)
+        if (oldVal.includes('.')) {
+          if ((newVal.length > oldVal.length) && newVal.endsWith('.')) {
+            this.$nextTick(() => {
+              this.form.amount = oldVal
+            })
+          }
+        }
+        const arr = newVal.split('.')
+        if (arr.length > 1) {
+          if (arr[1].length > 2) {
+            this.$nextTick(() => {
+              this.form.amount = oldVal
+            })
+          }
+        }
+      }
     }
   },
   onLoad() {
@@ -81,7 +110,14 @@ export default {
       }
     },
     openPayPanel() {
-      if (!this.form.amount) return
+      if (this.form.amount == '.') return
+      if (this.form.amount.startsWith('.')) {
+        this.form.amount = '0' + this.form.amount
+      }
+      if (this.form.amount.endsWith('.')) {
+        this.form.amount = this.form.amount.substr(0, this.form.amount.length - 1)
+      }
+      if (!this.form.amount) return this.$toast('请输入支付金额')
       this.payPanel = true
     },
     // 获取经销商信息
@@ -109,7 +145,15 @@ export default {
               scan_code: result,
               ...this.form
             })
-            // if (!data) return this.$toast(error)
+            if (!data) return this.$toast(error)
+            uni.showToast({
+              title: '支付成功',
+              icon: 'success',
+              duration: 2000
+            })
+            setTimeout(() => {
+              uni.navigateBack({ delta: 1 })
+            }, 2000)
           } catch (error) {
             console.log(error)
           }
@@ -120,8 +164,11 @@ export default {
       wx.checkSession({
         success: async(r) => {
           try {
-            const { data, error } = await Payment(this.form)
+            const { data, error, code } = await Payment(this.form)
             // if (!data) return this.$toast(error)
+            if (code && code === 2) {
+              this.$toast(res.error)
+            }
             WxPay(data.pay_package, () => {
               console.log("wxPay!")
             })
@@ -168,7 +215,7 @@ export default {
           } catch (error) {
             console.log(error)
           }
-        }, 3000)
+        }, 2400)
       }catch (err) {
         console.log(err)
       }
@@ -248,5 +295,18 @@ export default {
   height: 96rpx;
   font-size: 24rpx;
   color: @title-color;
+}
+.submit-btn {
+  width: 432rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  background: #2a58e1;
+  border-radius: 96rpx;
+  color: white;
+  text-align: center;
+  border: none;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 28rpx;
+  margin-top: 32rpx;
 }
 </style>

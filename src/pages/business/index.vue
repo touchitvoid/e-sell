@@ -5,7 +5,9 @@
     <view class="search padding-16">
       <view class="search-describe">
         共{{ total }}个商户
-        <text>按业务层级筛选</text>
+        <text @click="accountPanelShow = true">
+          {{ currentLevel.label || '按业务层级筛选' }}
+        </text>
       </view>
       <input 
         v-model="search"
@@ -21,14 +23,14 @@
         <view class="business-card__content">
           <view class="business-card__title">
             {{info.name + info.wx_nickname}}
-            <text>{{ info.id }}</text>
+            <text>{{ info.serial_number }}</text>
           </view>
-          <view>负责人姓名: {{ info.real_name }}</view>
-          <view>手机号码: {{ info.telephone }}</view>
-          <view>子账薄账号: {{ info.bank_sub_account || '' }}</view>
+          <view>负责人姓名: {{ info.real_name || '无' }}</view>
+          <view>手机号码: {{ info.telephone || '无' }}</view>
+          <view>子账薄账号: {{ info.bank_sub_account || '无' }}</view>
         </view>
         <view class="business-card__controller">
-          <view>
+          <view @click="viewQrcode(info)">
             <image mode="widthFix" src="@/static/icons/qrcode.png" />
             固定支付码
           </view>
@@ -36,7 +38,7 @@
             <image mode="widthFix" src="@/static/icons/document.png" />
             交易明细
           </view>
-          <view>
+          <view @click="userManage(info)">
             <image mode="widthFix" src="@/static/icons/user.png" />
             管理用户
           </view>
@@ -44,6 +46,13 @@
       </view>
       <no-data v-if="list.length === 0"></no-data>
     </view>
+    <pop-panel
+      v-if="accountPanelShow"
+      :options="levelOptions"
+      @success="accountPanelShow = false"
+      @close="accountPanelShow = false"
+      @select="selectLevel"
+    ></pop-panel>
   </view>
 </template>
 
@@ -51,25 +60,45 @@
 import FullStatusBar from "@/components/full-status-bar.vue"
 import NoData from '@/components/no-data'
 import { GetCustomerList, GetLevelList } from '@/api'
+import PopPanel from '@/components/pop-panel.vue'
+
 
 export default {
   name: "business",
   components: {
     FullStatusBar,
-    NoData
+    NoData,
+    PopPanel
   },
   data () {
     return {
       list: [],
       search: '',
-      sub_cd_id: 0,
-      total: 0
+      sub_cd_id: '',
+      total: 0,
+      accountPanelShow: false,
+      levelOptions: [],
+      currentLevel: {}
     }
   },
   onLoad() {
+    this.getList()
     this.getLevelList()
   },
   methods: {
+    viewQrcode(info) {
+      uni.setStorageSync('qrcode', JSON.stringify(info))
+      this.$link('/pages/tool/qrcode')
+    },
+    userManage(info) {
+      this.$link(`/pages/user/manage?subId=${info.id}`)
+    },
+    selectLevel(level) {
+      console.log(level)
+      this.currentLevel = level
+      this.getList()
+      this.accountPanelShow = false
+    },
     viewTradeDetail(info) {
       console.log(info)
       this.$link(`/pages/transaction/detail?subId=${info.id}`)
@@ -79,7 +108,7 @@ export default {
         const { data } =  await GetCustomerList({ 
           is_total: 1,
           keyword: this.search,
-          sub_cd_id: this.sub_cd_id
+          sub_cd_id: this.currentLevel.key
         })
         this.list = data.list
         this.total = +data.num
@@ -91,8 +120,11 @@ export default {
       try {
         const { data } = await GetLevelList()
         if (!data.length) return
-        this.sub_cd_id = data[0].id
-        this.getList()
+        // this.sub_cd_id = data[0].id
+        this.levelOptions = data.map(item => ({
+          label: item.name,
+          key: item.id
+        }))
       } catch (error) {
         console.log(error)
       }

@@ -1,38 +1,45 @@
 <template>
-  <view class="padding-16">
-    <view class="qrcode">
-      <view class="qrcode-title">
-        {{ info.name || '' }}<span v-if="info.username">（{{ info.username }}）</span>
-        <view>帝欧家居股份有限公司</view>
-      </view>
-      <view class="qrcode-payment">
-        <view>
-          <image mode="widthFix" src="@/static/icons/wechat.png" />微信支付
+  <view>
+    <full-status-bar title="固定支付码"></full-status-bar>
+    <view class="padding-16">
+      <view class="qrcode">
+        <view class="qrcode-title">
+          {{ info.name || '' }}<span v-if="info.username">（{{ info.username }}）</span>
+          <view>帝欧家居股份有限公司</view>
         </view>
-        <view>
-          <image mode="widthFix" src="@/static/icons/alipay.png" />支付宝支付
+        <view class="qrcode-payment">
+          <view>
+            <image mode="widthFix" src="@/static/icons/wechat.png" />微信支付
+          </view>
+          <view>
+            <image mode="widthFix" src="@/static/icons/alipay.png" />支付宝支付
+          </view>
+        </view>
+        <image class="qrcode-show" />
+        <view class="qrcode-bank">
+          <image mode="heightFix" src="@/static/images/bank.png" />
         </view>
       </view>
-      <image class="qrcode-show" />
-      <view class="qrcode-bank">
-        <image mode="heightFix" src="@/static/images/bank.png" />
-      </view>
+      <button class="save-btn" @click="save">保存图片</button>
     </view>
-    <button class="save-btn" @click="save">保存图片</button>
   </view>
 </template>
 
 <script>
+import FullStatusBar from '@/components/full-status-bar'
+
 export default {
   name: "qrcode",
-  props: {
-    info: {
-      type: Object,
-      default: () => ({})
+  components: { FullStatusBar },
+  data() {
+    return {
+      info: {}
     }
   },
-  data() {
-    return {}
+  onLoad() {
+    if (uni.getStorageSync('qrcode')) {
+      this.info = JSON.parse(uni.getStorageSync('qrcode'))
+    }
   },
   methods: {
     save() {

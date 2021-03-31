@@ -1,61 +1,106 @@
 <template>
   <view>
-    <full-status-bar title="订单详情"></full-status-bar>
+    <full-status-bar title="订单详情" overflow></full-status-bar>
+    <full-background></full-background>
     <view class="order-detail">
       <view class="order-amount">
         <view class="order-amount__money">
-          肥城帝王洁具（董帅）
-          <view> <text>¥</text>12,000.00 </view>
+          {{ info.distributor && info.distributor.name }}
+          <view> <text>¥</text>{{ info.amount || 0 }}</view>
         </view>
         <view class="order-amount__detail">
           <view>
             应结算金额
-            <view>11,987.40</view>
+            <view>{{ info.should_amount }}</view>
           </view>
           <view>
             结算手续费
-            <view>27.60</view>
+            <view>{{ info.charges_amount }}</view>
           </view>
           <view>
             总退款金额
-            <view>27.60</view>
+            <view>{{ info.refund_amount }}</view>
           </view>
         </view>
       </view>
       <view class="divider-16"></view>
       <view class="order-info">
         <view class="order-info__line">
-          交易状态 <text>支付成功</text>
+          订单编号 <text>{{ info.order_no || '未知' }}</text>
         </view>
         <view class="order-info__line">
-          状态描述 <text>支付成功,SUCCESS</text>
+          交易状态 <text>{{ info.status_name || '未知' }}</text>
+        </view>
+        <!-- <view class="order-info__line">
+          状态描述 <text>{{ info.trans_type_name }}</text>
+        </view> -->
+        <view class="order-info__line">
+          交易类型 <text>{{ info.trans_type_name }}</text>
         </view>
         <view class="order-info__line">
-          交易类型 <text>微信小程序</text>
+          创建时间 <text>{{ info.created_at }}</text>
         </view>
         <view class="order-info__line">
-          交易类型 <text>微信小程序</text>
+          渠道单号 <text>{{ info.third_party_transaction_id || '-' }}</text>
         </view>
         <view class="order-info__line">
-          交易类型 <text>微信小程序</text>
+          交易对手 <text>{{ info.traders || '-' }}</text>
         </view>
         <view class="order-info__line">
-          交易类型 <text>微信小程序</text>
+          订单备注 <text>{{ info.remark || '-' }}</text>
+        </view>
+        <view class="order-info__line">
+          订单描述 <text>{{ info.trans_type_name || '-' }}</text>
+        </view>
+        <view class="order-info__line">
+          商户简称 <text>{{ (info.customer && info.customer.sort_name) || '-' }}</text>
+        </view>
+        <view class="order-info__line">
+          商户编号 <text>{{ info.customer && info.customer.id }}</text>
         </view>
       </view>
     </view>
+    <view 
+      v-if="[1, 2].includes(info.trans_type) && info.status !== 3"
+      class="refund-button" 
+      @click.stop="handleRefund"
+    >退款</view>
   </view>
 </template>
 
 <script>
 import FullStatusBar from "@/components/full-status-bar.vue"
+import { Refund } from '@/api'
 
 export default {
   name: "order-detail",
   components: { FullStatusBar },
   data() {
-    return {}
+    return {
+      info: {}
+    }
   },
+  mounted() {
+    this.info = JSON.parse(uni.getStorageSync('orderInfo'))
+  },
+  methods: {
+    handleRefund() {
+      uni.showModal({
+        title: '订单退款',
+        content: '您确定要申请退款吗？',
+        success: async (res) => {
+          if (res.confirm) {
+            try {
+              const { data } = await Refund({ trans_id: this.info.id })
+              console.log(data)
+            } catch (error) {
+              console.log(error)
+            }
+          } 
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -65,6 +110,7 @@ export default {
 .order-detail {
   box-sizing: border-box;
   padding: 44rpx 32rpx;
+  padding-bottom: 48rpx;
   .order-amount {
     box-sizing: border-box;
     padding: 32rpx;
@@ -145,5 +191,17 @@ export default {
       }
     }
   }
+}
+.refund-button {
+  width: 376rpx;
+  height: 96rpx;
+  border-radius: 96px;
+  text-align: center;
+  line-height: 96rpx;
+  background: #FF3B30;
+  color: white;
+  font-size: 28rpx;
+  margin: 0 auto;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
 }
 </style>

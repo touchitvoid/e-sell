@@ -11,6 +11,8 @@ export const WxConfig = (api_list, cb = () => {}) => {
   })
 }
 
+export const verifyPhone = phone => /^1(3|4|5|6|7|8|9)\d{9}$/.test(phone)
+
 export const WxPay = (config, success = () => {}) => {
   // #ifdef H5
   WxConfig(['chooseWXPay'], () => {
